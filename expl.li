@@ -1,0 +1,8 @@
+if( a == b )
+{
+	print a;
+}
+if( b == c )
+{
+	print c;
+
