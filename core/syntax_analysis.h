@@ -1,31 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* Is a flag to result matched or not in regex. */
 int match;
+
+/* Identify level error: "warning", "fatal error", etc. */
 char* LEVEL_ERROR;
-int ERROR_BEGINEND_BLOCK;
-int ERROR_EXTESIONFILE;
-int ERROR_ENDINSTRUCTION;
-int ERRORS;
+
+/* Identify line of a error. */
 int LINE_ERROR;
+
+/* Iterating of code lines. */
 int LINE;
-int count_begin;
-int count_end;
+
+/* match when find a \n. */
 int match_break_line;
-int tam;
-char* EXTENSION;
-extern int total_matchs;
+
+/* length of code block. */
+int length;
+
+/* Define extension name to validation of extensions. */
+#ifndef EXTENSION
+#define EXTENSION "\\.li";
+#endif
+
+/* struct to count begin and end of code block. */
+struct count_begin_end_block
+{
+	int count_begin;
+	int count_end;
+};
+
+struct count_begin_end_block count_block;
+
 /* Get script file content */
 char* get_content_scriptfile( int argc, char **argv );
 
 /* Validate the extension file *.li */
 void validate_extesionfile( char* file_name );
 
-/* Validate begin and end of code block */
-void validate_be_block( char* content_to_analysis );
+/* Get begin and end of code block */
+void get_begin_end_block( char char_content );
 
-/* Validate end of instrauction */
+/* Validate begin and end of code block */
+void validate_beginend_block();
+
+/* Validate end of instructions */
 void validate_end_instructions( char* content_to_analysis );
 
-/* Initializes all functions */
+/* Read line by line of code block and call all function of validation here */
+void call_function_validations( char* content_to_analysis );
+
+/* main function equivalent */
 void init( int argc, char **argv );

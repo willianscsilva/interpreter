@@ -28,92 +28,103 @@ char* get_content_scriptfile( int argc, char **argv )
 
 void validate_extesionfile( char* file_name )
 {
-	ERRORS = ERROR_EXTESIONFILE = 1;
 	match = regex_match_syntax( "\\.li", file_name );
 	if( match == 0 )
 	{		
 		exit( EXIT_FAILURE );
 	}
-	ERROR_EXTESIONFILE = 0;
 }
 
-void validate_be_block( char* content_to_analysis )
-{		
-	LEVEL_ERROR = "FATAL_ERROR: ";	
-	register int i = 0;		
-	char char_content;
-	LINE = 0;
-	for ( i ; i < tam-1 ; i++ )
+void get_begin_end_block( char char_content )
+{
+	match = regex_match_syntax( "{", &char_content );
+	if( match == 1)
 	{
-		char_content = content_to_analysis[i];
+		count_block.count_begin++;
+	}
+	match = regex_match_syntax( "}", &char_content );
+	if( match == 1)
+	{
+		count_block.count_end++;
+	}
+}
+
+void validate_beginend_block()
+{
+	LEVEL_ERROR = "FATAL_ERROR: ";	
+	if( count_block.count_begin < count_block.count_end )
+	{
+		printf( "%sBegin block ( { ) not found!\n", LEVEL_ERROR );
+		count_block.count_begin = 0;
+		count_block.count_end = 0;
+		match_break_line = 0;
+		exit( EXIT_FAILURE );
+	}
+	if( count_block.count_begin > count_block.count_end )
+	{
+		printf( "%sEnd block ( } ) not found!\n", LEVEL_ERROR );
+		count_block.count_begin = 0;
+		count_block.count_end = 0;
+		match_break_line = 0;
+		exit( EXIT_FAILURE );
+	}
+	count_block.count_begin = 0;
+	count_block.count_end = 0;
+	match_break_line = 0;
+}
+
+void validate_end_instructions( char char_content )
+{	
+	LEVEL_ERROR = "FATAL_ERROR: ";
+	/*match = regex_match_syntax( ";[\n]?", char_content );
+	if( match == 0 )
+	{
+		exit( EXIT_FAILURE );
+	}*/
+}
+
+void call_function_validations( char* content_to_analysis )
+{
+	char char_content;
+	register int fl_verify_block;
+	match = regex_match_syntax( "(if|for|while)", content_to_analysis );	
+	if( match == 1 )
+	{	
+		fl_verify_block = 1;
+	}
+	
+	register int i = 0;
+	LINE = 0;
+	for ( i ; i < length-1 ; i++ )
+	{
 		match_break_line = regex_match_syntax( "\\n", &char_content );
 		if( match_break_line == 1)
 		{
 			LINE++;
 		}
-		match = regex_match_syntax( "{", &char_content );
-		if( match == 1)
+		char_content = content_to_analysis[i];
+		if( fl_verify_block == 1 )
 		{
-			count_begin++;			
-			match = 0;
+			get_begin_end_block( char_content );
 		}
-		match = regex_match_syntax( "}", &char_content );
-		if( match == 1)
-		{
-			count_end++;			
-			match = 0;
-		}		
 	}
-	
-	if( count_begin < count_end )
-	{
-		printf( "%sBegin block ( { ) not found!\n", LEVEL_ERROR );
-		count_begin = 0;
-		count_end = 0;
-		match_break_line = 0;
-		exit( EXIT_FAILURE );
-	}
-	if( count_begin > count_end )
-	{
-		printf( "%sEnd block ( } ) not found!\n", LEVEL_ERROR );
-		count_begin = 0;
-		count_end = 0;
-		match_break_line = 0;
-		exit( EXIT_FAILURE );
-	}
-	count_begin = 0;
-	count_end = 0;
-	match_break_line = 0;
-}
-
-void validate_end_instructions( char* content_to_analysis )
-{	
-	match = regex_match_syntax( ";[\n]?", content_to_analysis );
-	if( match == 0 )
-	{
-		exit( EXIT_FAILURE );
-	}
+	validate_beginend_block();
 }
 
 void init( int argc, char **argv )
 {
-	char* content_to_analysis;	
-	EXTENSION  = "\\.li";
-	count_begin = 0;
-	count_end = 0;
+	char* content_to_analysis;
 	match_break_line = 0;
+	match = 0;
+	count_block.count_begin = 0;
+	count_block.count_end = 0;
 	
-	validate_extesionfile( argv[1] );
+	validate_extesionfile( argv[1] );		
+	content_to_analysis = get_content_scriptfile( argc, argv );	
+	length = strlen( content_to_analysis );	
+	call_function_validations( content_to_analysis );	
 	
-	content_to_analysis = get_content_scriptfile( argc, argv );
-	tam = strlen( content_to_analysis );
-	
-	match = regex_match_syntax( "(if|for|while)", content_to_analysis );	
-	if( match == 1 )
-	{	
-		validate_be_block( content_to_analysis );
-	}
-	/*validate_end_instructions( content_to_analysis );*/
 	
 	free( content_to_analysis );
+	content_to_analysis = NULL;
 }
