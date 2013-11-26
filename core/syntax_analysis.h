@@ -47,10 +47,10 @@ void get_begin_end_block( char char_content );
 void validate_beginend_block();
 
 /* Validate end of instructions */
-void validate_end_instructions( char* content_to_analysis );
+void validate_end_instructions( char char_content );
 
 /* Read line by line of code block and call all function of validation here */
 void call_function_validations( char* content_to_analysis );
 
 /* main function equivalent */
-void init( int argc, char **argv );
+void syntax_init( int argc, char **argv );

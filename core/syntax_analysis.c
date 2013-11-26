@@ -111,7 +111,7 @@ void call_function_validations( char* content_to_analysis )
 	validate_beginend_block();
 }
 
-void init( int argc, char **argv )
+void syntax_init( int argc, char **argv )
 {
 	char* content_to_analysis;
 	match_break_line = 0;
