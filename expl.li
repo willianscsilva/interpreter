@@ -1,8 +1,8 @@
 if( a == b )
 {
-	print a;
+	print a
 }
 if( b == c )
 {
 	print c;
-
+}

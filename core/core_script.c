@@ -1,4 +1,5 @@
 #include "core_script.h"
+#include "core.h"
 
 void read_script_file()
 {
@@ -29,5 +30,5 @@ void read_script_file()
 
 void core_script_init()
 {
-	read_script_file();
+	read_script_file();	
 }

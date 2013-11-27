@@ -75,17 +75,19 @@ void validate_beginend_block()
 
 void validate_end_instructions( char char_content )
 {	
-	LEVEL_ERROR = "FATAL_ERROR: ";
-	/*match = regex_match_syntax( ";[\n]?", char_content );
+	/*LEVEL_ERROR = "FATAL_ERROR: ";	
+	match = regex_match_syntax( "[a-z A-Z]+;[\n]?", char_content );
 	if( match == 0 )
 	{
+		printf( "%sEnd of instructions ( ; ) not found!\n", LEVEL_ERROR );
 		exit( EXIT_FAILURE );
 	}*/
 }
 
-void call_function_validations( char* content_to_analysis )
+void call_validation_functions( char* content_to_analysis )
 {
 	char char_content;
+	/* if a conditional structure flag fl_verify_block = 1, and verify opening and closing code blocks with '{}' */
 	register int fl_verify_block;
 	match = regex_match_syntax( "(if|for|while)", content_to_analysis );	
 	if( match == 1 )
@@ -102,11 +104,15 @@ void call_function_validations( char* content_to_analysis )
 		{
 			LINE++;
 		}
+		
 		char_content = content_to_analysis[i];
+		
 		if( fl_verify_block == 1 )
 		{
 			get_begin_end_block( char_content );
 		}
+		
+		/* validate_end_instructions( char_content ); */
 	}
 	validate_beginend_block();
 }
@@ -122,7 +128,7 @@ void syntax_init( int argc, char **argv )
 	validate_extesionfile( argv[1] );		
 	content_to_analysis = get_content_scriptfile( argc, argv );	
 	length = strlen( content_to_analysis );	
-	call_function_validations( content_to_analysis );	
+	call_validation_functions( content_to_analysis );	
 	
 	
 	free( content_to_analysis );
