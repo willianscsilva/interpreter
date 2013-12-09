@@ -1,6 +1,9 @@
 /* typedef to functions defined by user */
 typedef void DEFINED_FUNC;
 
+/* typedef to internal statement */
+typedef void STATEMENT_T;
+
 /* When function return a string, attribute here and return */
 char* RETURNED_STRING_VAL;
 
@@ -17,7 +20,7 @@ int* RETURNED_DOUBLE_VAL;
 void* RETURNED_NULL_VAL;
 
 
-typedef union _statement_controllers_t
+typedef struct _statement_controllers_t
 {
 	int count_if;
 	int count_else;
