@@ -1,8 +1,12 @@
 /* typedef to functions defined by user */
-typedef void DEFINED_FUNC;
+typedef void DEFINED_FUNC_T;
 
-/* typedef to internal statement */
-typedef void STATEMENT_T;
+/* typedef void to internal functions to statement */
+typedef void STATEMENT_VOID_T;
+
+/* typedef int to internal functions to statement */
+typedef int STATEMENT_INT_T;
+
 
 /* When function return a string, attribute here and return */
 char* RETURNED_STRING_VAL;

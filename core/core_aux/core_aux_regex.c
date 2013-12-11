@@ -8,8 +8,6 @@ int regex_match_syntax(char* expression, char* str )
         int erroffset;
 		int ovector[30];
         int rc;
-        //printf("expression => %s\n", expression);
-        //printf("str => %s\n", str);        
         re = pcre_compile(expression, options, &error, &erroffset, NULL);
         if(re == NULL) {
                 printf("Could not compile re.\n");
@@ -23,6 +21,15 @@ int regex_match_syntax(char* expression, char* str )
         }
         else
         {
+				int begin;
+				int end;
+				int i;			
+				for (i = 0; i < rc; i++)
+				{
+					begin = ovector[2 * i];
+					end = ovector[2 * i + 1] - ovector[2 * i];
+				}
+				content_match = strndup(str + begin, end);				
                 pcre_free(re);                			
                 return 1;
         }
