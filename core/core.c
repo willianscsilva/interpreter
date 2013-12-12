@@ -26,8 +26,7 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );
-				extract_args_to_func_operator( statement_string );
-				//colocar aqui funcao para extrair os argumentos para a funcao operador
+				extract_args_to_func_operator( statement_string );				
 				//compare_comparison_operator( result_match_operator.op_int );
 			}
 		}
