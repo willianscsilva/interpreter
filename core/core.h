@@ -64,4 +64,4 @@ STATEMENT_VOID_T find_comparison_operator( char* statement_string );
 STATEMENT_VOID_T compare_comparison_operator( int operator );
 
 /* extract arguments to the operator */
-STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string );
+STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract );

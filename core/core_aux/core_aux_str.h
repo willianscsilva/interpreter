@@ -8,4 +8,13 @@
  * the wheel has already been invented, use it, if it is possible to improve it!
  * */
 char *strdup(const char *src);
-void split_str(const char *src, const char *tokens, char ***list, size_t *len);
+void SPLIT_STR(const char *src, const char *tokens, char ***list, size_t *len);
+
+/* */
+void free_list( char **list, size_t len );
+
+/* 
+ * Credit this:
+ * http://www.rohitab.com/discuss/topic/25126-str-replace-equivalent-in-c/
+ * */
+char *REPLACE_STR(char *string, char *sub, char *replace);

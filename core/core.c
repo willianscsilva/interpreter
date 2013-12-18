@@ -26,28 +26,27 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );
-				extract_args_to_func_operator( statement_string );				
+				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );				
 				//compare_comparison_operator( result_match_operator.op_int );
 			}
 		}
 	}
 }
 
-STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string )
+STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract )
 {
 	char **list;
 	size_t i, len;
-	split_str( statement_string, result_match_operator.op_char_p, &list, &len);
+	SPLIT_STR( statement_string, result_match_operator.op_char_p, &list, &len);
+	char* var_extracted;
 	for(i = 0; i < len; ++i)
 	{
-		printf("%d: %s\n", i+1, list[i]);
+		printf("%d: %s => %s\n", i+1, list[i], statement_extract);
+		var_extracted = REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( list[i], statement_extract, "" ), "(", "" ), ")", "" ), " ", "" ), "\n", "" );
+		printf("RESULT: %s\n", var_extracted);
 	}
-	/* free list */
-	for(i = 0; i < len; ++i)
-	{
-		free(list[i]);
-	}
-	free(list);
+	
+	free_list( list, len );	
 }
 
 STATEMENT_VOID_T find_comparison_operator( char* statement_string )
