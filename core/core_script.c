@@ -19,7 +19,7 @@ void read_script_file()
 	while ( (read = getline(&line, &len, fp)) != -1 ) {
 	  
 		find_statement( line );
-		break;//tirar isso depois
+		//break;//tirar isso depois
 		i++;
 	}
 
