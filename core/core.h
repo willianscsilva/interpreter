@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core_statement.h"
-#include "core_aux/core_aux_variables.h"
+#include "core_variables.h"
 
 /* LENGTH_OP_VEC_VAL => length of 'internal_comparison_operators' values */
 #define LENGTH_OP_VEC_VAL 10
@@ -75,3 +75,9 @@ STATEMENT_INT_T exec_comparison_operator( int operator );
 
 /* extract arguments to the operator */
 STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract );
+
+/* Print only value of variables */
+STATEMENT_VOID_T VAR_PRINT( char * var_to_print );
+
+/* Print only strings expl.: print "hello world!"*/
+STATEMENT_VOID_T STRING_PRINT( char * string_to_print );

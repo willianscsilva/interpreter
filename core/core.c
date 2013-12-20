@@ -25,20 +25,24 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 		match = regex_match_syntax( internal_statement[i], statement_string );
 		if( match == 1 )
 		{
-			/*
-			 * Ta dando bug no registro das variaveis
-			 * */
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );				
 				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );				
 				exec_comparison_operator( result_match_operator.op_int );
-			}
+			}			
 			if( internal_statement[i][0] == PRINT_ESTATEMENT_INT )
 			{
 				match = regex_match_syntax( "print (.*?);", statement_string );
 				result_var_search = search_variables_registered( content_match );
-				//printf("result_var_search => %d\n", result_var_search );
+				if( result_var_search > 0 )
+				{
+					VAR_PRINT( result_var_search->value );
+				}
+				else
+				{
+					STRING_PRINT( REPLACE_STR( content_match, "\"", "" ) );
+				}
 			}
 		}
 	}
@@ -49,12 +53,15 @@ STATEMENT_VOID_T find_comparison_operator( char* statement_string )
 	register int i;
 	char operators_array[LENGTH_OP_INDEX_VAL][LENGTH_OP_VEC_VAL] = { OP_EQUAL, OP_NON_EQUAL, OP_LESS_THAN, OP_GREATER_THAN, OP_LESS_EQUAL_THAN, OP_GREATER_EQUAL_THAN };
 	for( i = 0; i < LENGTH_OP_INDEX_VAL; i++ )
-	{
-		match = regex_match_syntax( operators_array[i], statement_string );
-		if( match == 1)
+	{		
+		if( strcmp( operators_array[i], "") != 0 )
 		{
-			result_match_operator.op_int = content_match[0];
-			result_match_operator.op_char_p = content_match;			
+			match = regex_match_syntax( operators_array[i], statement_string );
+			if( match == 1)
+			{
+				result_match_operator.op_int = content_match[0];
+				result_match_operator.op_char_p = content_match;			
+			}
 		}
 	}	
 }
@@ -92,12 +99,12 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
 			if ( strcmp( value_left_temp, value_right_temp ) == 0 )
 			{
-				//free_register_temp_variables();
+				//free_register_temp_variables();				
 				return 1;
 			}
 			else
 			{
-				free_register_temp_variables();
+				//free_register_temp_variables();
 				return 0;
 			}
 		}
@@ -113,4 +120,14 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		{
 			
 		}
+}
+
+STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
+{
+	printf( "%s\n", var_to_print );
+}
+
+STATEMENT_VOID_T STRING_PRINT( char * string_to_print )
+{
+	printf( "%s\n", string_to_print );
 }

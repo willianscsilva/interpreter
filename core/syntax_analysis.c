@@ -28,7 +28,7 @@ char* get_content_scriptfile( int argc, char **argv )
 
 void validate_extesionfile( char* file_name )
 {
-	match = regex_match_syntax( "\\.li", file_name );
+	match = regex_match_syntax( "\\.mav", file_name );
 	if( match == 0 )
 	{		
 		exit( EXIT_FAILURE );

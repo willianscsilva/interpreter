@@ -1,6 +1,6 @@
 if( a == b )
 {
-	print a;
+	print "igual";
 }
 if( b == c )
 {

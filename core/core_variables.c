@@ -1,4 +1,4 @@
-#include "core_aux_variables.h"
+#include "core_variables.h"
 
 variables_t *FIRST = NULL; /* Pointer to the first list element */
 variables_t *LAST = NULL; /* Pointer to the last list element */

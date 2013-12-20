@@ -22,7 +22,7 @@ int length;
 
 /* Define extension name to validation of extensions. */
 #ifndef EXTENSION
-#define EXTENSION "\\.li";
+#define EXTENSION "\\.mav";
 #endif
 
 /* struct to count begin and end of code block. */
