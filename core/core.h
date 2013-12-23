@@ -37,6 +37,14 @@
 /* IO */
 #define PRINT_ESTATEMENT "print"
 
+/* Define token to begin and end a block of instructions. */
+#define BEGIN_BLOCK "{"
+#define END_BLOCK "}"
+
+/* Define token to begin and end a block of instructions.(ascii) */
+#define BEGIN_BLOCK_INT BEGIN_BLOCK[0]
+#define END_BLOCK_INT END_BLOCK[0]
+
 /* define decimals(ascii) of control struct */
 #define IF_STRUCT_CTRL_INT IF_STRUCT_CTRL[0]
 #define ELSE_STRUCT_CTRL_INT ELSE_STRUCT_CTRL[0]
@@ -61,6 +69,13 @@ char* content_match;
 /* Result of search by variable  */
 variables_t* result_var_search;
 
+/* Controller with flags if a statement */
+statement_controllers_t statement_control;
+
+int control_begin_block;
+int control_end_block;
+int result_comparison;
+
 /* Functions defined by user */
 DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes );
 
@@ -75,6 +90,9 @@ STATEMENT_INT_T exec_comparison_operator( int operator );
 
 /* extract arguments to the operator */
 STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract );
+
+/* */
+STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string );
 
 /* Print only value of variables */
 STATEMENT_VOID_T VAR_PRINT( char * var_to_print );

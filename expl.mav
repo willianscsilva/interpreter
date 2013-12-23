@@ -2,7 +2,11 @@ if( a == b )
 {
 	print "igual";
 }
-if( b == c )
+if( b != c )
 {
 	print c;
+}
+if( a != c )
+{       
+        print c;
 }

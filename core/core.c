@@ -16,32 +16,47 @@ DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes )
 }
 
 STATEMENT_VOID_T find_statement( char* statement_string )
-{
+{	
 	register int i;
-	int operator;
+	int operator;	
 	
 	for( i = 0; i < LENGTH_OP_INDEX_VAL; i++ )
 	{
+		if( statement_control.flag_if == 1 )
+		{
+			match = regex_match_syntax( BEGIN_BLOCK, statement_string);
+			if( match == 1 )
+			{				
+				control_begin_block = 1;/* set flag where occur a '{' */				
+			}
+		}
+		
 		match = regex_match_syntax( internal_statement[i], statement_string );
 		if( match == 1 )
 		{
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );				
-				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );				
-				exec_comparison_operator( result_match_operator.op_int );
-			}			
+				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );
+				result_comparison = exec_comparison_operator( result_match_operator.op_int );
+				
+				statement_control.flag_if = 1;/* set flag where occur a if statement */
+			}
+			
 			if( internal_statement[i][0] == PRINT_ESTATEMENT_INT )
 			{
-				match = regex_match_syntax( "print (.*?);", statement_string );
-				result_var_search = search_variables_registered( content_match );
-				if( result_var_search > 0 )
+				if( statement_control.flag_if == 1 && control_begin_block == 1 )
 				{
-					VAR_PRINT( result_var_search->value );
+					if( result_comparison == 1 )
+					{
+						PRINT_ESTATEMENT_F( statement_string );
+					}
+					statement_control.flag_if = 0;
+					control_begin_block = 0;
 				}
 				else
 				{
-					STRING_PRINT( REPLACE_STR( content_match, "\"", "" ) );
+					PRINT_ESTATEMENT_F( statement_string );
 				}
 			}
 		}
@@ -71,18 +86,42 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 	char **list;
 	size_t i, len;
 	SPLIT_STR( statement_string, result_match_operator.op_char_p, &list, &len);
-	char* var_extracted;
+	char* name_var_extracted;/* name of variable defined or not in script */
 	
 	for(i = 0; i < len; ++i)
 	{	
-		var_extracted = REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( list[i], statement_extract, "" ), "(", "" ), ")", "" ), " ", "" ), "\n", "" );
+		name_var_extracted = REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( list[i], statement_extract, "" ), "(", "" ), ")", "" ), " ", "" ), "\n", "" );
 		
-		result_var_search = search_variables_registered( var_extracted );
-		
+		result_var_search = search_variables_registered( name_var_extracted );
+		/* 
+		 * APARENTEMENTE TEM UM PROBLEMA EM REPETIR AS VARIAVEIS AO LOGO DO SCRIPT 
+		 * Exemplo:
+		 * 	if( a == b )
+			{
+					print "igual";
+			}
+			if( b != c )
+			{       
+					print c;
+			}
+			if( a != c ) //AQUI GERA UM ERRO DE SEGMENTAÇAO
+			{       
+					print c;
+			}
+		 * */
 		if( result_var_search == 0 )
 		{
-			register_variables( var_extracted, "NULL" );
-			register_variables_temp( var_extracted, "NULL" );
+			/* teste - (o if) tirar isso depois */
+			if( strcmp(name_var_extracted, "c") == 0 )
+			{
+				register_variables( name_var_extracted, "STRING MAIOR" );
+				register_variables_temp( name_var_extracted, "STRING MAIOR" );
+			}	
+			else
+			{
+				register_variables( name_var_extracted, "NULL" );
+				register_variables_temp( name_var_extracted, "NULL" );
+			}
 		}		
 	}
 	
@@ -90,36 +129,96 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 }
 
 STATEMENT_INT_T exec_comparison_operator( int operator )
-{
+{		
 		char *value_left_temp	= NULL;
-		char *value_right_temp	= NULL;
+		char *value_right_temp	= NULL;		
 		
-		if( operator == OP_EQUAL_INT )
-		{	
+		if( operator == OP_EQUAL_INT )/* Execute equal operator ( == )*/
+		{
 			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
 			if ( strcmp( value_left_temp, value_right_temp ) == 0 )
 			{
-				//free_register_temp_variables();				
+				free_register_temp_variables();
+				value_left_temp = NULL;
+				value_right_temp = NULL;
 				return 1;
 			}
 			else
 			{
-				//free_register_temp_variables();
+				free_register_temp_variables();
+				value_left_temp = NULL;
+				value_right_temp = NULL;
 				return 0;
 			}
 		}
 		else if( operator == OP_NON_EQUAL_INT )
 		{
-			
+			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
+			if ( strcmp( value_left_temp, value_right_temp ) != 0 )
+			{
+				free_register_temp_variables();	
+				value_left_temp = NULL;
+				value_right_temp = NULL;			
+				return 1;
+			}
+			else
+			{
+				free_register_temp_variables();
+				value_left_temp = NULL;
+				value_right_temp = NULL;
+				return 0;
+			}
+		}
+		else if( operator == OP_GREATER_THAN_INT )
+		{
+			copy_temporary_value_var( &value_left_temp, &value_right_temp );
+			if ( strcmp( value_left_temp, value_right_temp ) > 0 )
+			{
+				free_register_temp_variables();	
+				value_left_temp = NULL;
+				value_right_temp = NULL;			
+				return 1;
+			}
+			else
+			{
+				free_register_temp_variables();
+				value_left_temp = NULL;
+				value_right_temp = NULL;
+				return 0;
+			}
 		}
 		else if( operator == OP_LESS_THAN_INT )
 		{
-			
+			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
+			if ( strcmp( value_left_temp, value_right_temp ) < 0 )
+			{
+				free_register_temp_variables();	
+				value_left_temp = NULL;
+				value_right_temp = NULL;			
+				return 1;
+			}
+			else
+			{				
+				free_register_temp_variables();
+				value_left_temp = NULL;
+				value_right_temp = NULL;
+				return 0;
+			}
 		}
-		else if( operator == OP_GREATER_EQUAL_THAN_INT )
-		{
-			
-		}
+}
+
+STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )
+{
+	match = regex_match_syntax( "print (.*?);", statement_string );
+	result_var_search = search_variables_registered( content_match );
+	if( result_var_search > 0 )
+	{
+		VAR_PRINT( result_var_search->value );
+	}
+	else
+	{
+		STRING_PRINT( content_match );
+	}
 }
 
 STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
@@ -129,5 +228,6 @@ STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
 
 STATEMENT_VOID_T STRING_PRINT( char * string_to_print )
 {
-	printf( "%s\n", string_to_print );
+	
+	printf( "%s\n", REPLACE_STR( string_to_print, "\"", "" ) );
 }

@@ -26,8 +26,8 @@ void* RETURNED_NULL_VAL;
 
 typedef struct _statement_controllers_t
 {
-	int count_if;
-	int count_else;
-	int count_def;
+	int flag_if;
+	int flag_else;
+	int flag_def;
 	
 } statement_controllers_t;

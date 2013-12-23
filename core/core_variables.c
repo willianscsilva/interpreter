@@ -97,6 +97,7 @@ void copy_temporary_value_var( char **left_value_to_copy, char **right_value_to_
 		{
 			*right_value_to_copy = pointer->value;
 		}
+		
 		pointer = pointer->next;
 	}
 }
