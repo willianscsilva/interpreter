@@ -10,9 +10,6 @@
 char *strdup(const char *src);
 void SPLIT_STR(const char *src, const char *tokens, char ***list, size_t *len);
 
-/* */
-void free_list( char **list, size_t len );
-
 /* 
  * Credit this:
  * http://www.rohitab.com/discuss/topic/25126-str-replace-equivalent-in-c/

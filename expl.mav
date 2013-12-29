@@ -6,7 +6,3 @@ if( b != c )
 {
 	print c;
 }
-if( a != c )
-{       
-        print c;
-}

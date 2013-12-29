@@ -43,7 +43,7 @@ void register_variables( char *data, char* value )
 		LAST->next = ALLOCA;
 		LAST = ALLOCA;
 	}
-	LAST->next = NULL;
+	LAST->next = NULL;	
 }
 
 register_variables_value_temporarily_t * search_variables_registered_temp( char *data )
@@ -59,7 +59,7 @@ register_variables_value_temporarily_t * search_variables_registered_temp( char 
       return pointer;
 }
 
-void register_variables_temp( char *data, char* value )
+void register_variables_temp( char *data, char* value, int operator_id )
 {
     ALLOCA_TEMP = ( struct register_variables_value_temporarily_t * ) malloc( sizeof( struct register_variables_value_temporarily_t ) ); 
     if ( !ALLOCA_TEMP ) 
@@ -70,6 +70,10 @@ void register_variables_temp( char *data, char* value )
 
     strcpy( ALLOCA_TEMP->var_name, data );    
 	strcpy( ALLOCA_TEMP->value, value );
+	if( operator_id != 0 )
+	{
+		ALLOCA_TEMP->operator_id = operator_id;
+	}
     
 	if ( !FIRST_TEMP ) 
 	{                
@@ -81,21 +85,27 @@ void register_variables_temp( char *data, char* value )
 		LAST_TEMP->next = ALLOCA_TEMP;
 		LAST_TEMP = ALLOCA_TEMP;
 	}
-	LAST_TEMP->next = NULL;
+	LAST_TEMP->next = NULL;	
 }
 
-void copy_temporary_value_var( char **left_value_to_copy, char **right_value_to_copy )
+void copy_temporary_value_op_var( char **left_value_to_copy, char **right_value_to_copy, int operator_id ) /* ( op => operator ) only operation to operators */
 {
 	register_variables_value_temporarily_t *pointer = FIRST_TEMP;
-	while (pointer) 
+	while ( pointer ) 
 	{
 		if( *left_value_to_copy == NULL )
 		{
-			*left_value_to_copy = pointer->value;
+			if( pointer->operator_id == operator_id )
+			{
+				*left_value_to_copy = pointer->value;
+			}
 		}
 		else if( *right_value_to_copy == NULL)
 		{
-			*right_value_to_copy = pointer->value;
+			if( pointer->operator_id == operator_id )
+			{
+				*right_value_to_copy = pointer->value;
+			}
 		}
 		
 		pointer = pointer->next;
@@ -104,10 +114,16 @@ void copy_temporary_value_var( char **left_value_to_copy, char **right_value_to_
 
 void free_register_temp_variables()
 {
-	free( ALLOCA_TEMP );
+	if( ALLOCA_TEMP )
+	{
+		free( ALLOCA_TEMP );
+	}
 }
 
 void free_register_variables()
 {
-	free( ALLOCA );
+	if( ALLOCA )
+	{
+		free( ALLOCA );
+	}
 }

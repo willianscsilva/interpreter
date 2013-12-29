@@ -26,10 +26,12 @@ void read_script_file()
 	if ( line )
 	{
 		free(line);
-	}
+	}		
 }
 
 void core_script_init()
 {
 	read_script_file();	
+	free_register_variables();
+	free_register_temp_variables();
 }

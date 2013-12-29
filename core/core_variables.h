@@ -22,6 +22,7 @@ typedef struct register_variables_value_temporarily_t
 {
 	char var_name[30];
 	char value[30];
+	int operator_id;
 	struct register_variables_value_temporarily_t *next;
 } register_variables_value_temporarily_t;
 
@@ -29,10 +30,10 @@ typedef struct register_variables_value_temporarily_t
 register_variables_value_temporarily_t * search_variables_registered_temp( char *data );
 
 /* */
-void register_variables_temp( char *data, char* value );
+void register_variables_temp( char *data, char* value, int operator_id );
 
 /* */
-void copy_temporary_value_var( char **left_value_to_copy, char **right_value_to_copy );
+void copy_temporary_value_op_var( char **left_value_to_copy, char **right_value_to_copy, int operator_id );
 
 /* */
 void free_register_temp_variables();

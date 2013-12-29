@@ -41,6 +41,9 @@
 #define BEGIN_BLOCK "{"
 #define END_BLOCK "}"
 
+/* */
+#define ATTRIBUTION_OPERATOR "="
+
 /* Define token to begin and end a block of instructions.(ascii) */
 #define BEGIN_BLOCK_INT BEGIN_BLOCK[0]
 #define END_BLOCK_INT END_BLOCK[0]
@@ -92,6 +95,9 @@ STATEMENT_INT_T exec_comparison_operator( int operator );
 STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract );
 
 /* */
+STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code );
+
+/* print statement */
 STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string );
 
 /* Print only value of variables */

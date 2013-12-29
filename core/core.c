@@ -15,6 +15,17 @@ DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes )
 	
 }
 
+STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
+{
+	match = regex_match_syntax( ATTRIBUTION_OPERATOR, line_script_code);
+	if( match == 1 )
+	{
+		char **list;
+		size_t i, len;
+		SPLIT_STR( line_script_code, ATTRIBUTION_OPERATOR, &list, &len);
+	}
+}
+
 STATEMENT_VOID_T find_statement( char* statement_string )
 {	
 	register int i;
@@ -60,7 +71,7 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 				}
 			}
 		}
-	}
+	}	
 }
 
 STATEMENT_VOID_T find_comparison_operator( char* statement_string )
@@ -87,45 +98,41 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 	size_t i, len;
 	SPLIT_STR( statement_string, result_match_operator.op_char_p, &list, &len);
 	char* name_var_extracted;/* name of variable defined or not in script */
-	
+	char* var_rep1 = NULL;
+	char* var_rep2 = NULL;
+	char* var_rep3 = NULL;
+	char* var_rep4 = NULL;
 	for(i = 0; i < len; ++i)
-	{	
-		name_var_extracted = REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( REPLACE_STR( list[i], statement_extract, "" ), "(", "" ), ")", "" ), " ", "" ), "\n", "" );
+	{
+		var_rep1 = REPLACE_STR( list[i], statement_extract, "" );
+		var_rep2 = REPLACE_STR( var_rep1, "(", ""  );
+		var_rep3 = REPLACE_STR( var_rep2, ")", "" );
+		var_rep4 = REPLACE_STR( var_rep3, " ", "" );		
+		name_var_extracted = REPLACE_STR( var_rep4, "\n", "" );
 		
 		result_var_search = search_variables_registered( name_var_extracted );
-		/* 
-		 * APARENTEMENTE TEM UM PROBLEMA EM REPETIR AS VARIAVEIS AO LOGO DO SCRIPT 
-		 * Exemplo:
-		 * 	if( a == b )
-			{
-					print "igual";
-			}
-			if( b != c )
-			{       
-					print c;
-			}
-			if( a != c ) //AQUI GERA UM ERRO DE SEGMENTAÇAO
-			{       
-					print c;
-			}
-		 * */
+		
 		if( result_var_search == 0 )
-		{
-			/* teste - (o if) tirar isso depois */
-			if( strcmp(name_var_extracted, "c") == 0 )
-			{
-				register_variables( name_var_extracted, "STRING MAIOR" );
-				register_variables_temp( name_var_extracted, "STRING MAIOR" );
-			}	
-			else
-			{
-				register_variables( name_var_extracted, "NULL" );
-				register_variables_temp( name_var_extracted, "NULL" );
-			}
-		}		
+		{	
+			register_variables( name_var_extracted, "NULL" );			
+		}
+		register_variables_temp( name_var_extracted, "NULL", result_match_operator.op_int );
+		
+		var_rep1 = NULL;
+		var_rep2 = NULL;
+		var_rep3 = NULL;
+		var_rep4 = NULL;
+		name_var_extracted = NULL;
+		
 	}
 	
-	free_list( list, len );	
+	free( var_rep1 );
+	free( var_rep2 );
+	free( var_rep3 );
+	free( var_rep4 );
+	free( name_var_extracted );
+	
+	free(list);
 }
 
 STATEMENT_INT_T exec_comparison_operator( int operator )
@@ -133,73 +140,65 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		char *value_left_temp	= NULL;
 		char *value_right_temp	= NULL;		
 		
-		if( operator == OP_EQUAL_INT )/* Execute equal operator ( == )*/
+		if( operator == OP_EQUAL_INT ) /* Execute equal operator ( == )*/
 		{
-			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
 			if ( strcmp( value_left_temp, value_right_temp ) == 0 )
 			{
-				free_register_temp_variables();
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 1;
 			}
 			else
 			{
-				free_register_temp_variables();
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 0;
 			}
 		}
-		else if( operator == OP_NON_EQUAL_INT )
+		else if( operator == OP_NON_EQUAL_INT ) /* Execute non equal operator ( != )*/
 		{
-			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
 			if ( strcmp( value_left_temp, value_right_temp ) != 0 )
 			{
-				free_register_temp_variables();	
 				value_left_temp = NULL;
 				value_right_temp = NULL;			
 				return 1;
 			}
 			else
 			{
-				free_register_temp_variables();
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 0;
 			}
 		}
-		else if( operator == OP_GREATER_THAN_INT )
+		else if( operator == OP_GREATER_THAN_INT ) /* Execute non equal operator ( > ) */
 		{
-			copy_temporary_value_var( &value_left_temp, &value_right_temp );
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
 			if ( strcmp( value_left_temp, value_right_temp ) > 0 )
 			{
-				free_register_temp_variables();	
 				value_left_temp = NULL;
 				value_right_temp = NULL;			
 				return 1;
 			}
 			else
 			{
-				free_register_temp_variables();
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 0;
 			}
 		}
-		else if( operator == OP_LESS_THAN_INT )
+		else if( operator == OP_LESS_THAN_INT ) /* Execute non equal operator ( < )*/
 		{
-			copy_temporary_value_var( &value_left_temp, &value_right_temp );			
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
 			if ( strcmp( value_left_temp, value_right_temp ) < 0 )
-			{
-				free_register_temp_variables();	
+			{	
 				value_left_temp = NULL;
 				value_right_temp = NULL;			
 				return 1;
 			}
 			else
-			{				
-				free_register_temp_variables();
+			{	
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 0;
@@ -228,6 +227,8 @@ STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
 
 STATEMENT_VOID_T STRING_PRINT( char * string_to_print )
 {
-	
-	printf( "%s\n", REPLACE_STR( string_to_print, "\"", "" ) );
+	char * clear_str_to_print = NULL;	
+	clear_str_to_print = REPLACE_STR( string_to_print, "\"", "" );	
+	printf( "%s\n", clear_str_to_print );	
+	free( clear_str_to_print );
 }
