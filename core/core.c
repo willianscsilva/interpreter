@@ -20,9 +20,24 @@ STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
 	match = regex_match_syntax( ATTRIBUTION_OPERATOR, line_script_code);
 	if( match == 1 )
 	{
-		char **list;
-		size_t i, len;
-		SPLIT_STR( line_script_code, ATTRIBUTION_OPERATOR, &list, &len);
+		match = regex_match_syntax("(.*?)[ ]?[!]+|[=]{2}[ ]?(.*?)", line_script_code);
+		if( match == 0 )
+		{
+			char*  name_var_extracted;
+			char* value_var_extracted;
+			char **list;
+			size_t i, len;
+			
+			SPLIT_STR( line_script_code, ATTRIBUTION_OPERATOR, &list, &len);
+			name_var_extracted = REPLACE_STR( list[0], " ", "" );
+			value_var_extracted = REPLACE_STR( REPLACE_STR( list[1], " ", "" ), ";", "" );
+			
+			register_variables( name_var_extracted, value_var_extracted );
+			name_var_extracted = NULL;
+			value_var_extracted = NULL;
+			free( name_var_extracted );
+			free( value_var_extracted );
+		}		
 	}
 }
 
@@ -115,8 +130,12 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 		if( result_var_search == 0 )
 		{	
 			register_variables( name_var_extracted, "NULL" );			
+			register_variables_temp( name_var_extracted, "NULL", result_match_operator.op_int );
 		}
-		register_variables_temp( name_var_extracted, "NULL", result_match_operator.op_int );
+		else
+		{
+			register_variables_temp( name_var_extracted, result_var_search->value, result_match_operator.op_int );
+		}
 		
 		var_rep1 = NULL;
 		var_rep2 = NULL;

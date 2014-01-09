@@ -16,8 +16,9 @@ void read_script_file()
 		exit(EXIT_FAILURE);
 	}
 	i = 1;
-	while ( (read = getline(&line, &len, fp)) != -1 ) {
-	  
+	while ( (read = getline(&line, &len, fp)) != -1 ) 
+	{
+		attribute_value_to_variables( line );
 		find_statement( line );
 		//break;//tirar isso depois
 		i++;
