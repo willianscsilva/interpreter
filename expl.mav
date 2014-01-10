@@ -1,10 +1,19 @@
 a = 10;
-b = 15;
+b = 10;
+c = "coco";
 if( a == b )
 {
-	print "igual";
+	print "'a' igual a variavel 'b'";
 }
 if( b != c )
 {
-	print b;
+	print c;
+}
+d = 51;
+e = 6;
+if( d < e )
+{
+	print d;
+	print e;
+	print "'d' é menor que a var 'e'";
 }

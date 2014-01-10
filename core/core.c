@@ -179,7 +179,7 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		{
 			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
 			if ( strcmp( value_left_temp, value_right_temp ) != 0 )
-			{
+			{				
 				value_left_temp = NULL;
 				value_right_temp = NULL;			
 				return 1;
@@ -211,13 +211,13 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		{
 			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
 			if ( strcmp( value_left_temp, value_right_temp ) < 0 )
-			{	
+			{
 				value_left_temp = NULL;
 				value_right_temp = NULL;			
 				return 1;
 			}
 			else
-			{	
+			{				
 				value_left_temp = NULL;
 				value_right_temp = NULL;
 				return 0;
@@ -241,13 +241,17 @@ STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )
 
 STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
 {
+	var_to_print = REPLACE_STR( var_to_print, "\"", "" );
 	printf( "%s\n", var_to_print );
+	var_to_print = NULL;
+	free( var_to_print );
 }
 
 STATEMENT_VOID_T STRING_PRINT( char * string_to_print )
 {
 	char * clear_str_to_print = NULL;	
 	clear_str_to_print = REPLACE_STR( string_to_print, "\"", "" );	
-	printf( "%s\n", clear_str_to_print );	
+	printf( "%s\n", clear_str_to_print );
+	clear_str_to_print = NULL;
 	free( clear_str_to_print );
 }

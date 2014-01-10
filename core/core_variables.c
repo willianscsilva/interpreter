@@ -29,7 +29,7 @@ void register_variables( char *data, char* value )
        printf( "Insufficient memory!\n" );
        exit(0);
     }
-
+	
     strcpy( ALLOCA->var_name, data );    
 	strcpy( ALLOCA->value, value );
     
