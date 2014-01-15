@@ -9,11 +9,17 @@ if( b != c )
 {
 	print c;
 }
-d = 51;
-e = 6;
+d = 17;
+e = 19;
 if( d < e )
 {
 	print d;
 	print e;
 	print "'d' é menor que a var 'e'";
+}
+if( d > e )
+{
+        print d;
+        print e;
+        print "'d' é maior que a var 'e'";
 }

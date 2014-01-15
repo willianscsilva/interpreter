@@ -55,6 +55,12 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 			{				
 				control_begin_block = 1;/* set flag where occur a '{' */				
 			}
+			match = regex_match_syntax( END_BLOCK, statement_string);
+			if( match == 1 )/* set flag where occur a '}' */
+			{
+				statement_control.flag_if = 0;
+				control_begin_block = 0;				
+			}
 		}
 		
 		match = regex_match_syntax( internal_statement[i], statement_string );
@@ -76,15 +82,13 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 					if( result_comparison == 1 )
 					{
 						PRINT_ESTATEMENT_F( statement_string );
-					}
-					statement_control.flag_if = 0;
-					control_begin_block = 0;
+					}					
 				}
 				else
 				{
 					PRINT_ESTATEMENT_F( statement_string );
 				}
-			}
+			}			
 		}
 	}	
 }
@@ -161,68 +165,166 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		
 		if( operator == OP_EQUAL_INT ) /* Execute equal operator ( == )*/
 		{
-			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
-			if ( strcmp( value_left_temp, value_right_temp ) == 0 )
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
+			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
+			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;
-				return 1;
+				if( value_left_temp == value_right_temp )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 			else
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;
-				return 0;
+				if ( strcmp( value_left_temp, value_right_temp ) == 0 )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 		}
 		else if( operator == OP_NON_EQUAL_INT ) /* Execute non equal operator ( != )*/
 		{
-			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
-			if ( strcmp( value_left_temp, value_right_temp ) != 0 )
-			{				
-				value_left_temp = NULL;
-				value_right_temp = NULL;			
-				return 1;
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
+			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
+			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
+			{
+				if( value_left_temp != value_right_temp )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 			else
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;
-				return 0;
+				if ( strcmp( value_left_temp, value_right_temp ) != 0 )
+				{				
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 		}
 		else if( operator == OP_GREATER_THAN_INT ) /* Execute non equal operator ( > ) */
 		{
 			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
-			if ( strcmp( value_left_temp, value_right_temp ) > 0 )
+			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
+			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;			
-				return 1;
+				if( value_left_temp > value_right_temp )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 			else
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;
-				return 0;
+				if ( strcmp( value_left_temp, value_right_temp ) > 0 )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 		}
 		else if( operator == OP_LESS_THAN_INT ) /* Execute non equal operator ( < )*/
 		{
-			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
-			if ( strcmp( value_left_temp, value_right_temp ) < 0 )
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
+			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
+			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
 			{
-				value_left_temp = NULL;
-				value_right_temp = NULL;			
-				return 1;
+				if( value_left_temp < value_right_temp )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 			else
-			{				
-				value_left_temp = NULL;
-				value_right_temp = NULL;
-				return 0;
+			{
+				if ( strcmp( value_left_temp, value_right_temp ) < 0 )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;			
+					return 1;
+				}
+				else
+				{				
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
 			}
 		}
+}
+
+/* try improve attribution to to this typecast: thus cause warning. */
+STATEMENT_VOID_T AUTO_TYPE_CASTING( char **value_variable_l, char **value_variable_r )
+{
+	flag_typecasting_l = 0;
+	flag_typecasting_r = 0;
+	match = regex_match_syntax( "[A-Za-z!@#$%&*)(*/.,\\|_-]+", *value_variable_l );
+	if( match == 0 )
+	{			
+		flag_typecasting_l = 1;
+	}
+	match = regex_match_syntax( "[A-Za-z!@#$%&*)(*/.,\\|_-]+", *value_variable_r );
+	if( match == 0 )
+	{
+		flag_typecasting_r = 1;
+	}
+	if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
+	{
+		*value_variable_l = atoi(*value_variable_l);
+		*value_variable_r = atoi(*value_variable_r);
+	}
 }
 
 STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )
