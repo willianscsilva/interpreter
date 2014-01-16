@@ -15,3 +15,5 @@ void SPLIT_STR(const char *src, const char *tokens, char ***list, size_t *len);
  * http://www.rohitab.com/discuss/topic/25126-str-replace-equivalent-in-c/
  * */
 char *REPLACE_STR(char *string, char *sub, char *replace);
+
+char* INTERNAL_TRIM ( char* str );

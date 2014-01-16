@@ -23,3 +23,7 @@ if( d > e )
         print e;
         print "'d' é maior que a var 'e'";
 }
+
+print 1 + 1;
+
+

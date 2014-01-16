@@ -30,7 +30,7 @@ int regex_match_syntax(char* expression, char* str )
 					end = ovector[2 * i + 1] - ovector[2 * i];
 				}
 				content_match = strndup(str + begin, end);				
-                pcre_free(re);                			
+                pcre_free(re);
                 return 1;
         }
 }

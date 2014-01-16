@@ -11,12 +11,12 @@
 #define LENGTH_OP_INDEX_VAL 7
 
 /* define comparison operators */
-#define OP_EQUAL "=="
-#define OP_NON_EQUAL "!="
-#define OP_LESS_THAN "<"
-#define OP_GREATER_THAN ">"
-#define OP_LESS_EQUAL_THAN "<="
-#define OP_GREATER_EQUAL_THAN ">="
+#define OP_EQUAL 				"=="
+#define OP_NON_EQUAL 			"!="
+#define OP_LESS_THAN 			"<"
+#define OP_GREATER_THAN 		">"
+#define OP_LESS_EQUAL_THAN 		"<="
+#define OP_GREATER_EQUAL_THAN 	">="
 
 /* get decimals ( ascii ) of operators */
 #define OP_EQUAL_INT 				OP_EQUAL[0]
@@ -103,6 +103,8 @@ STATEMENT_VOID_T find_statement( char* statement_string );
 /* find the comparison operator in a script line */
 STATEMENT_VOID_T find_comparison_operator( char* statement_string );
 
+STATEMENT_VOID_T find_arithmetic_operations( char** line_script_code );
+
 /* execute comparison with our operators we know */
 STATEMENT_INT_T exec_comparison_operator( int operator );
 
@@ -119,7 +121,7 @@ STATEMENT_VOID_T AUTO_TYPE_CASTING( char **value_variable_l, char **value_variab
 STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string );
 
 /* Print only value of variables */
-STATEMENT_VOID_T VAR_PRINT( char * var_to_print );
+STATEMENT_VOID_T PRINT_VAR( char * var_to_print );
 
 /* Print only strings expl.: print "hello world!"*/
-STATEMENT_VOID_T STRING_PRINT( char * string_to_print );
+STATEMENT_VOID_T PRINT_STRING( char * string_to_print );

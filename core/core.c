@@ -41,10 +41,47 @@ STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
 	}
 }
 
+STATEMENT_VOID_T find_arithmetic_operations( char** line_script_code )
+{
+	char **list;
+	size_t len;
+	char* left_val;
+	char* right_val;
+	register int match_sum 	= 0;
+	register int match_sub 	= 0;
+	register int match_mult = 0;
+	register int match_div 	= 0;
+	
+	//match_sum = regex_match_syntax(	"[0-9 ]+[+]+[0-9 ]+", *line_script_code );
+	/*if( match_sum )
+	{
+		SPLIT_STR( content_match, "+", &list, &len);
+		left_val = INTERNAL_TRIM ( (char*) list[0] );
+		right_val = INTERNAL_TRIM ( (char*) list[1] );
+		printf("left_val => %s\n", left_val);
+		printf("right_val => %s\n", right_val);
+		content_match = NULL;
+	}
+	match_sub 	= regex_match_syntax( 	"[-]+", *line_script_code );
+	match_mult 	= regex_match_syntax(	"[*]+", *line_script_code );
+	match_div 	= regex_match_syntax( 	"[/]+", *line_script_code );*/
+	
+	left_val	= NULL;
+	right_val 	= NULL;
+	list 		= NULL;	
+	
+	free( left_val );
+	free( right_val );
+	free( list );	
+}
+
 STATEMENT_VOID_T find_statement( char* statement_string )
 {	
 	register int i;
 	int operator;	
+	
+	/* TESTE */
+	find_arithmetic_operations( &statement_string );
 	
 	for( i = 0; i < LENGTH_OP_INDEX_VAL; i++ )
 	{
@@ -108,7 +145,7 @@ STATEMENT_VOID_T find_comparison_operator( char* statement_string )
 				result_match_operator.op_char_p = content_match;			
 			}
 		}
-	}	
+	}
 }
 
 STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* statement_extract )
@@ -155,7 +192,7 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 	free( var_rep4 );
 	free( name_var_extracted );
 	
-	free(list);
+	free( list );
 }
 
 STATEMENT_INT_T exec_comparison_operator( int operator )
@@ -333,15 +370,15 @@ STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )
 	result_var_search = search_variables_registered( content_match );
 	if( result_var_search > 0 )
 	{
-		VAR_PRINT( result_var_search->value );
+		PRINT_VAR( result_var_search->value );
 	}
 	else
 	{
-		STRING_PRINT( content_match );
+		PRINT_STRING( content_match );
 	}
 }
 
-STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
+STATEMENT_VOID_T PRINT_VAR( char * var_to_print )
 {
 	var_to_print = REPLACE_STR( var_to_print, "\"", "" );
 	printf( "%s\n", var_to_print );
@@ -349,7 +386,7 @@ STATEMENT_VOID_T VAR_PRINT( char * var_to_print )
 	free( var_to_print );
 }
 
-STATEMENT_VOID_T STRING_PRINT( char * string_to_print )
+STATEMENT_VOID_T PRINT_STRING( char * string_to_print )
 {
 	char * clear_str_to_print = NULL;	
 	clear_str_to_print = REPLACE_STR( string_to_print, "\"", "" );	
