@@ -32,6 +32,12 @@
 #define OP_MULTIPLICATION 	"*"
 #define OP_DIVISION 		"/"
 
+/* arithmetic operations */
+#define SUM(a, b)(a + b)
+#define SUB(a, b)(a - b)
+#define MULT(a, b)(a * b)
+#define DIV(a, b)(a / b)
+
 /* arithmetic operators ( ascii ) */
 #define OP_ADDITION_INT 		OP_ADDITION[0]
 #define OP_SUBTRACTION_INT 		OP_SUBTRACTION[0]
@@ -103,7 +109,7 @@ STATEMENT_VOID_T find_statement( char* statement_string );
 /* find the comparison operator in a script line */
 STATEMENT_VOID_T find_comparison_operator( char* statement_string );
 
-STATEMENT_VOID_T find_arithmetic_operations( char** line_script_code );
+STATEMENT_VOID_T arithmetic_operations( char** line_script_code );
 
 /* execute comparison with our operators we know */
 STATEMENT_INT_T exec_comparison_operator( int operator );

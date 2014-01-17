@@ -9,8 +9,8 @@ if( b != c )
 {
 	print c;
 }
-d = 17;
-e = 19;
+d = 27;
+e = 20;
 if( d < e )
 {
 	print d;
@@ -24,6 +24,7 @@ if( d > e )
         print "'d' é maior que a var 'e'";
 }
 
-print 1 + 1;
-
-
+print 33 + 33;
+print 33 - 30;
+print 2 * 3;
+print 20 / 5;

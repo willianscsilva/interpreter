@@ -41,47 +41,125 @@ STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
 	}
 }
 
-STATEMENT_VOID_T find_arithmetic_operations( char** line_script_code )
+STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 {
 	char **list;
 	size_t len;
 	char* left_val;
 	char* right_val;
-	register int match_sum 	= 0;
+	
+	char result_sum_char[10];
+	char result_sub_char[10];
+	char result_mult_char[10];
+	char result_div_char[10];
+	 
+	register int match_sum 	= 0;	
 	register int match_sub 	= 0;
 	register int match_mult = 0;
 	register int match_div 	= 0;
 	
-	//match_sum = regex_match_syntax(	"[0-9 ]+[+]+[0-9 ]+", *line_script_code );
-	/*if( match_sum )
+	long int left_val_c, right_val_c, result_sum, result_sub, result_mult, result_div = 0;	
+	
+	match_sum = regex_match_syntax(	"[0-9 ]+[+]+[0-9 ]+", *line_script_code );
+	if( match_sum )
 	{
 		SPLIT_STR( content_match, "+", &list, &len);
+		
 		left_val = INTERNAL_TRIM ( (char*) list[0] );
-		right_val = INTERNAL_TRIM ( (char*) list[1] );
-		printf("left_val => %s\n", left_val);
-		printf("right_val => %s\n", right_val);
-		content_match = NULL;
+		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		
+		AUTO_TYPE_CASTING( &left_val, &right_val );
+		
+		left_val_c =  ( long int ) left_val;
+		right_val_c = ( long int ) right_val;
+		
+		result_sum = SUM(left_val_c, right_val_c);
+		sprintf(result_sum_char, "%d", result_sum);
+		
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_sum_char );
+		
+		content_match 	= NULL;
+		left_val		= NULL;
+		right_val 		= NULL;
+		list 			= NULL;		
 	}
-	match_sub 	= regex_match_syntax( 	"[-]+", *line_script_code );
-	match_mult 	= regex_match_syntax(	"[*]+", *line_script_code );
-	match_div 	= regex_match_syntax( 	"[/]+", *line_script_code );*/
-	
-	left_val	= NULL;
-	right_val 	= NULL;
-	list 		= NULL;	
-	
-	free( left_val );
-	free( right_val );
-	free( list );	
+	match_sub 	= regex_match_syntax( "[0-9 ]+[-]+[0-9 ]+", *line_script_code );
+	if( match_sub )
+	{
+		SPLIT_STR( content_match, "-", &list, &len);
+		
+		left_val = INTERNAL_TRIM ( (char*) list[0] );
+		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		
+		AUTO_TYPE_CASTING( &left_val, &right_val );
+		
+		left_val_c =  ( long int ) left_val;
+		right_val_c = ( long int ) right_val;
+		
+		result_sub = SUB( left_val_c, right_val_c );
+		sprintf( result_sub_char, "%d", result_sub );
+		
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_sub_char );
+		
+		content_match 	= NULL;
+		left_val		= NULL;
+		right_val 		= NULL;
+		list 			= NULL;
+	}
+	match_mult 	= regex_match_syntax( "[0-9 ]+[*]+[0-9 ]+", *line_script_code );
+	if( match_mult )
+	{
+		SPLIT_STR( content_match, "*", &list, &len);
+		
+		left_val = INTERNAL_TRIM ( (char*) list[0] );
+		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		
+		AUTO_TYPE_CASTING( &left_val, &right_val );
+		
+		left_val_c =  ( long int ) left_val;
+		right_val_c = ( long int ) right_val;
+		
+		result_mult = MULT( left_val_c, right_val_c );
+		sprintf( result_mult_char, "%d", result_mult );
+		
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_mult_char );
+		
+		content_match 	= NULL;
+		left_val		= NULL;
+		right_val 		= NULL;
+		list 			= NULL;
+	}
+	match_div 	= regex_match_syntax( "[0-9 ]+[/]+[0-9 ]+", *line_script_code );
+	if( match_div )
+	{
+		SPLIT_STR( content_match, "/", &list, &len);
+		
+		left_val = INTERNAL_TRIM ( (char*) list[0] );
+		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		
+		AUTO_TYPE_CASTING( &left_val, &right_val );
+		
+		left_val_c =  ( long int ) left_val;
+		right_val_c = ( long int ) right_val;
+		
+		result_div = DIV( left_val_c, right_val_c );
+		sprintf( result_div_char, "%d", result_div );
+		
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_div_char );
+		
+		content_match 	= NULL;
+		left_val		= NULL;
+		right_val 		= NULL;
+		list 			= NULL;
+	}	
 }
 
 STATEMENT_VOID_T find_statement( char* statement_string )
-{	
+{
 	register int i;
-	int operator;	
+	int operator;
 	
-	/* TESTE */
-	find_arithmetic_operations( &statement_string );
+	arithmetic_operations( &statement_string );
 	
 	for( i = 0; i < LENGTH_OP_INDEX_VAL; i++ )
 	{
@@ -359,8 +437,8 @@ STATEMENT_VOID_T AUTO_TYPE_CASTING( char **value_variable_l, char **value_variab
 	}
 	if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
 	{
-		*value_variable_l = atoi(*value_variable_l);
-		*value_variable_r = atoi(*value_variable_r);
+		*value_variable_l = (long int)atoi(*value_variable_l);
+		*value_variable_r = (long int)atoi(*value_variable_r);		
 	}
 }
 
