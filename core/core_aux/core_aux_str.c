@@ -91,13 +91,14 @@ free_and_exit:
     free(copy);
 }
 
-char* INTERNAL_TRIM ( char* str )
+char* INTERNAL_TRIM_L ( char* str )
 {
 	register int str_length = 0;
 	register int i;
 	char* space = " ";
-	int space_int = space[0];
-	str_length = strlen( str );
+	int space_int = space[0];	
+	
+	str_length = strlen( str );	
 	char* str_new = (char*) malloc( ( str_length ) * sizeof( char ) );
 	char* str_swap = (char*) malloc( ( str_length ) * sizeof( char ) );
 	for( i = 0; i < str_length; i++ )

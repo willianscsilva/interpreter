@@ -65,8 +65,8 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	{
 		SPLIT_STR( content_match, "+", &list, &len);
 		
-		left_val = INTERNAL_TRIM ( (char*) list[0] );
-		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
+		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
 		
 		AUTO_TYPE_CASTING( &left_val, &right_val );
 		
@@ -76,7 +76,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 		result_sum = SUM(left_val_c, right_val_c);
 		sprintf(result_sum_char, "%d", result_sum);
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_sum_char );
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_sum_char );
 		
 		content_match 	= NULL;
 		left_val		= NULL;
@@ -88,8 +88,8 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	{
 		SPLIT_STR( content_match, "-", &list, &len);
 		
-		left_val = INTERNAL_TRIM ( (char*) list[0] );
-		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
+		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
 		
 		AUTO_TYPE_CASTING( &left_val, &right_val );
 		
@@ -99,7 +99,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 		result_sub = SUB( left_val_c, right_val_c );
 		sprintf( result_sub_char, "%d", result_sub );
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_sub_char );
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_sub_char );
 		
 		content_match 	= NULL;
 		left_val		= NULL;
@@ -111,8 +111,8 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	{
 		SPLIT_STR( content_match, "*", &list, &len);
 		
-		left_val = INTERNAL_TRIM ( (char*) list[0] );
-		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
+		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
 		
 		AUTO_TYPE_CASTING( &left_val, &right_val );
 		
@@ -122,7 +122,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 		result_mult = MULT( left_val_c, right_val_c );
 		sprintf( result_mult_char, "%d", result_mult );
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_mult_char );
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_mult_char );
 		
 		content_match 	= NULL;
 		left_val		= NULL;
@@ -134,8 +134,8 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	{
 		SPLIT_STR( content_match, "/", &list, &len);
 		
-		left_val = INTERNAL_TRIM ( (char*) list[0] );
-		right_val = INTERNAL_TRIM ( (char*) list[1] );		
+		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
+		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
 		
 		AUTO_TYPE_CASTING( &left_val, &right_val );
 		
@@ -145,7 +145,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 		result_div = DIV( left_val_c, right_val_c );
 		sprintf( result_div_char, "%d", result_div );
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM( content_match ), result_div_char );
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_div_char );
 		
 		content_match 	= NULL;
 		left_val		= NULL;
@@ -205,7 +205,7 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 				}
 			}			
 		}
-	}	
+	}		
 }
 
 STATEMENT_VOID_T find_comparison_operator( char* statement_string )
@@ -458,8 +458,8 @@ STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )
 
 STATEMENT_VOID_T PRINT_VAR( char * var_to_print )
 {
-	var_to_print = REPLACE_STR( var_to_print, "\"", "" );
-	printf( "%s\n", var_to_print );
+	var_to_print = REPLACE_STR( REPLACE_STR( var_to_print, "\"", "" ), "\n", "" );
+	printf( "%s\n", INTERNAL_TRIM_L( var_to_print ) );
 	var_to_print = NULL;
 	free( var_to_print );
 }
@@ -467,8 +467,9 @@ STATEMENT_VOID_T PRINT_VAR( char * var_to_print )
 STATEMENT_VOID_T PRINT_STRING( char * string_to_print )
 {
 	char * clear_str_to_print = NULL;	
-	clear_str_to_print = REPLACE_STR( string_to_print, "\"", "" );	
-	printf( "%s\n", clear_str_to_print );
+	clear_str_to_print = REPLACE_STR( REPLACE_STR( string_to_print, "\"", "" ), "\n", "" );	
+	
+	printf( "%s\n", INTERNAL_TRIM_L( clear_str_to_print ) );
 	clear_str_to_print = NULL;
 	free( clear_str_to_print );
 }

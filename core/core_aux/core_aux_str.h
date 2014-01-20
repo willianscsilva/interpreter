@@ -16,4 +16,5 @@ void SPLIT_STR(const char *src, const char *tokens, char ***list, size_t *len);
  * */
 char *REPLACE_STR(char *string, char *sub, char *replace);
 
-char* INTERNAL_TRIM ( char* str );
+/* remove space from begin of string */
+char* INTERNAL_TRIM_L ( char* str );

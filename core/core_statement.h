@@ -7,6 +7,12 @@ typedef void STATEMENT_VOID_T;
 /* typedef int to internal functions to statement */
 typedef int STATEMENT_INT_T;
 
+/* typedef char to internal functions to statement */
+typedef char STATEMENT_CHAR_T;
+
+/* typedef char* to internal functions to statement */
+typedef char* STATEMENT_CHAR_P_T;
+
 
 /* When function return a string, attribute here and return */
 char* RETURNED_STRING_VAL;
