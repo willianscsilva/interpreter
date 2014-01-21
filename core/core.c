@@ -47,6 +47,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	size_t len;
 	char* left_val;
 	char* right_val;
+	char* internal_content_match;
 	
 	char result_sum_char[10];
 	char result_sub_char[10];
@@ -58,100 +59,243 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 	register int match_mult = 0;
 	register int match_div 	= 0;
 	
-	long int left_val_c, right_val_c, result_sum, result_sub, result_mult, result_div = 0;	
+	typecasting_t result_type_cast_l;
+	typecasting_t result_type_cast_r;
 	
-	match_sum = regex_match_syntax(	"[0-9 ]+[+]+[0-9 ]+", *line_script_code );
-	if( match_sum )
+	int result_sum_int = 0, result_sub_int = 0, result_mult_int = 0, result_div_int = 0;	
+	float result_sum_float = 0, result_sub_float = 0, result_mult_float = 0, result_div_float = 0;	
+	
+	match_sum = regex_match_syntax(	"[0-9. ]+[+]+[0-9. ]+", *line_script_code );
+	internal_content_match = content_match;
+	if( match_sum == 1 )
 	{
-		SPLIT_STR( content_match, "+", &list, &len);
 		
-		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
-		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
+		SPLIT_STR( internal_content_match, "+", &list, &len);
 		
-		AUTO_TYPE_CASTING( &left_val, &right_val );
+		left_val	= INTERNAL_TRIM_L( list[0] );		
+		right_val 	= INTERNAL_TRIM_L( list[1] );
 		
-		left_val_c =  ( long int ) left_val;
-		right_val_c = ( long int ) right_val;
+		result_type_cast_l = AUTO_TYPE_CASTING( left_val);
+		result_type_cast_r = AUTO_TYPE_CASTING( right_val );
+					
+		if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_sum_int = SUM(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_sum_int = SUM(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_float);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_sum_int = SUM(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_sum_float = SUM(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_float);
+		}
 		
-		result_sum = SUM(left_val_c, right_val_c);
-		sprintf(result_sum_char, "%d", result_sum);
+		if( result_sum_float != 0 )
+		{
+			sprintf( result_sum_char, "%f", result_sum_float );
+		}
+		else if( result_sum_int != 0 )
+		{
+			sprintf( result_sum_char, "%d", result_sum_int );
+		}
+		else
+		{
+			sprintf( result_sum_char, "%d", 0 );
+		}
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( internal_content_match ), result_sum_char );
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_sum_char );
+		internal_content_match 	= NULL;
+		content_match 			= NULL;
 		
-		content_match 	= NULL;
-		left_val		= NULL;
-		right_val 		= NULL;
-		list 			= NULL;		
+		result_type_cast_l.flag_cast_int 	= 0;
+		result_type_cast_r.flag_cast_int 	= 0;
+		result_type_cast_l.value_cast_float = 0;
+		result_type_cast_r.value_cast_float = 0;
+		flag_typecasting = 0;
+		
+		left_val	= NULL;
+		right_val 	= NULL;
+		list 		= NULL;
+		len			= 0;
 	}
-	match_sub 	= regex_match_syntax( "[0-9 ]+[-]+[0-9 ]+", *line_script_code );
+	
+	match_sub = regex_match_syntax( "[0-9. ]+[-]+[0-9. ]+", *line_script_code );
+    internal_content_match = content_match;
 	if( match_sub )
 	{
-		SPLIT_STR( content_match, "-", &list, &len);
+		SPLIT_STR( internal_content_match, "-", &list, &len);
 		
-		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
-		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
+		left_val	= INTERNAL_TRIM_L( list[0] );		
+		right_val 	= INTERNAL_TRIM_L( list[1] );
 		
-		AUTO_TYPE_CASTING( &left_val, &right_val );
+		result_type_cast_l = AUTO_TYPE_CASTING( left_val);
+		result_type_cast_r = AUTO_TYPE_CASTING( right_val );
+					
+		if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_sub_int = SUB(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_int);			
+		}
+		else if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_sub_int = SUB(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_float);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_sub_int = SUB(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_sub_float = SUB(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_float);
+		}
 		
-		left_val_c =  ( long int ) left_val;
-		right_val_c = ( long int ) right_val;
+		if( result_sub_float != 0 )
+		{
+			sprintf( result_sub_char, "%f", result_sub_float );
+		}
+		else if( result_sub_int != 0 )
+		{
+			sprintf( result_sub_char, "%d", result_sub_int );
+		}
+		else
+		{
+			sprintf( result_sub_char, "%d", 0 );
+		}
 		
-		result_sub = SUB( left_val_c, right_val_c );
-		sprintf( result_sub_char, "%d", result_sub );
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( internal_content_match ), result_sub_char );
+				
+		internal_content_match 	= NULL;
+		content_match 			= NULL;
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_sub_char );
+		result_type_cast_l.flag_cast_int 	= 0;
+		result_type_cast_r.flag_cast_int 	= 0;
+		result_type_cast_l.value_cast_float = 0;
+		result_type_cast_r.value_cast_float = 0;
+		flag_typecasting = 0;
 		
-		content_match 	= NULL;
-		left_val		= NULL;
-		right_val 		= NULL;
-		list 			= NULL;
+		left_val	= NULL;
+		right_val 	= NULL;
+		list 		= NULL;
+		len			= 0;
 	}
-	match_mult 	= regex_match_syntax( "[0-9 ]+[*]+[0-9 ]+", *line_script_code );
+	match_mult 	= regex_match_syntax( "[0-9. ]+[*]+[0-9. ]+", *line_script_code );
+	internal_content_match = content_match;
 	if( match_mult )
 	{
-		SPLIT_STR( content_match, "*", &list, &len);
+		SPLIT_STR( internal_content_match, "*", &list, &len);
 		
-		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
-		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
+		left_val	= INTERNAL_TRIM_L( list[0] );		
+		right_val 	= INTERNAL_TRIM_L( list[1] );
 		
-		AUTO_TYPE_CASTING( &left_val, &right_val );
+		result_type_cast_l = AUTO_TYPE_CASTING( left_val);
+		result_type_cast_r = AUTO_TYPE_CASTING( right_val );
+					
+		if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_mult_int = MULT(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_mult_int = MULT(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_float);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_mult_int = MULT(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_mult_float = MULT(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_float);
+		}
 		
-		left_val_c =  ( long int ) left_val;
-		right_val_c = ( long int ) right_val;
+		if( result_mult_float != 0 )
+		{
+			sprintf( result_mult_char, "%f", result_mult_float );
+		}
+		else if( result_mult_int != 0 )
+		{
+			sprintf( result_mult_char, "%d", result_mult_int );
+		}
+		else
+		{
+			sprintf( result_mult_char, "%d", 0 );
+		}
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( internal_content_match ), result_mult_char );
 		
-		result_mult = MULT( left_val_c, right_val_c );
-		sprintf( result_mult_char, "%d", result_mult );
+		internal_content_match 	= NULL;
+		content_match 			= NULL;
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_mult_char );
+		result_type_cast_l.flag_cast_int 	= 0;
+		result_type_cast_r.flag_cast_int 	= 0;
+		result_type_cast_l.value_cast_float = 0;
+		result_type_cast_r.value_cast_float = 0;
+		flag_typecasting = 0;
 		
-		content_match 	= NULL;
-		left_val		= NULL;
-		right_val 		= NULL;
-		list 			= NULL;
+		left_val	= NULL;
+		right_val 	= NULL;
+		list 		= NULL;
+		len			= 0;
 	}
-	match_div 	= regex_match_syntax( "[0-9 ]+[/]+[0-9 ]+", *line_script_code );
+	match_div 	= regex_match_syntax( "[0-9. ]+[/]+[0-9. ]+", *line_script_code );
+	internal_content_match = content_match;
 	if( match_div )
 	{
 		SPLIT_STR( content_match, "/", &list, &len);
 		
-		left_val = INTERNAL_TRIM_L ( (char*) list[0] );
-		right_val = INTERNAL_TRIM_L ( (char*) list[1] );		
+		left_val	= INTERNAL_TRIM_L( list[0] );		
+		right_val 	= INTERNAL_TRIM_L( list[1] );
 		
-		AUTO_TYPE_CASTING( &left_val, &right_val );
+		result_type_cast_l = AUTO_TYPE_CASTING( left_val);
+		result_type_cast_r = AUTO_TYPE_CASTING( right_val );
+					
+		if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_div_int = DIV(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_div_int = DIV(result_type_cast_l.value_cast_int, result_type_cast_r.value_cast_float);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_int == 1 )
+		{
+			result_div_int = DIV(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_int);
+		}
+		else if( result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1 )
+		{
+			result_div_float = DIV(result_type_cast_l.value_cast_float, result_type_cast_r.value_cast_float);
+		}
 		
-		left_val_c =  ( long int ) left_val;
-		right_val_c = ( long int ) right_val;
+		if( result_div_float != 0 )
+		{
+			sprintf( result_div_char, "%f", result_div_float );
+		}
+		else if( result_div_int != 0 )
+		{
+			sprintf( result_div_char, "%d", result_div_int );
+		}
+		else
+		{
+			sprintf( result_div_char, "%d", 0 );
+		}
+		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( internal_content_match ), result_div_char );
 		
-		result_div = DIV( left_val_c, right_val_c );
-		sprintf( result_div_char, "%d", result_div );
+		internal_content_match 	= NULL;
+		content_match 			= NULL;
 		
-		*line_script_code = REPLACE_STR( *line_script_code, INTERNAL_TRIM_L( content_match ), result_div_char );
+		result_type_cast_l.flag_cast_int 	= 0;
+		result_type_cast_r.flag_cast_int 	= 0;
+		result_type_cast_l.value_cast_float = 0;
+		result_type_cast_r.value_cast_float = 0;
+		flag_typecasting = 0;		
 		
-		content_match 	= NULL;
-		left_val		= NULL;
-		right_val 		= NULL;
-		list 			= NULL;
-	}	
+		left_val	= NULL;
+		right_val 	= NULL;
+		list 		= NULL;
+		len			= 0;
+	}
 }
 
 STATEMENT_VOID_T find_statement( char* statement_string )
@@ -278,17 +422,49 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 		char *value_left_temp	= NULL;
 		char *value_right_temp	= NULL;		
 		
+		flag_typecasting = 0;
+		
+		typecasting_t result_type_cast_l;
+		typecasting_t result_type_cast_r;
+		
 		if( operator == OP_EQUAL_INT ) /* Execute equal operator ( == )*/
 		{
-			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
-			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
-			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
-			{
-				if( value_left_temp == value_right_temp )
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );			
+			
+			result_type_cast_l = AUTO_TYPE_CASTING( value_left_temp);
+			result_type_cast_r = AUTO_TYPE_CASTING( value_right_temp );
+			
+			if( flag_typecasting == 1 )
+			{				
+				if( (result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1) )
 				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;			
-					return 1;
+					if( result_type_cast_l.value_cast_int == result_type_cast_r.value_cast_int )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
+				}
+				else if( (result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1) )
+				{
+					if( result_type_cast_l.value_cast_float == result_type_cast_r.value_cast_float )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
 				}
 				else
 				{
@@ -299,7 +475,7 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 			}
 			else
 			{
-				if ( strcmp( value_left_temp, value_right_temp ) == 0 )
+				if ( strlen( value_left_temp ) == strlen( value_right_temp ) )
 				{
 					value_left_temp = NULL;
 					value_right_temp = NULL;
@@ -312,53 +488,50 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 					return 0;
 				}
 			}
-		}
-		else if( operator == OP_NON_EQUAL_INT ) /* Execute non equal operator ( != )*/
-		{
-			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
-			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
-			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
-			{
-				if( value_left_temp != value_right_temp )
-				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;			
-					return 1;
-				}
-				else
-				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;
-					return 0;
-				}
-			}
-			else
-			{
-				if ( strcmp( value_left_temp, value_right_temp ) != 0 )
-				{				
-					value_left_temp = NULL;
-					value_right_temp = NULL;			
-					return 1;
-				}
-				else
-				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;
-					return 0;
-				}
-			}
+			result_type_cast_l.flag_cast_int 	= 0;
+			result_type_cast_l.value_cast_float = 0;
+			result_type_cast_r.flag_cast_int 	= 0;			
+			result_type_cast_r.value_cast_float = 0;
+			flag_typecasting = 0;
 		}
 		else if( operator == OP_GREATER_THAN_INT ) /* Execute non equal operator ( > ) */
 		{
 			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
-			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
-			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
+						
+			result_type_cast_l = AUTO_TYPE_CASTING( value_left_temp);
+			result_type_cast_r = AUTO_TYPE_CASTING( value_right_temp );
+			
+			if( flag_typecasting == 1 )
 			{
-				if( value_left_temp > value_right_temp )
+				if( (result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1) )
 				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;			
-					return 1;
+					if( result_type_cast_l.value_cast_int > result_type_cast_r.value_cast_int )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
+				}
+				else if( (result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1) )
+				{
+					if( result_type_cast_l.value_cast_float > result_type_cast_r.value_cast_float )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
 				}
 				else
 				{
@@ -369,10 +542,10 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 			}
 			else
 			{
-				if ( strcmp( value_left_temp, value_right_temp ) > 0 )
+				if ( strlen( value_left_temp ) > strlen( value_right_temp ) )
 				{
 					value_left_temp = NULL;
-					value_right_temp = NULL;			
+					value_right_temp = NULL;
 					return 1;
 				}
 				else
@@ -382,18 +555,117 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 					return 0;
 				}
 			}
+			result_type_cast_l.flag_cast_int 	= 0;
+			result_type_cast_l.value_cast_float = 0;
+			result_type_cast_r.flag_cast_int 	= 0;			
+			result_type_cast_r.value_cast_float = 0;
+			flag_typecasting = 0;
 		}
+		else if( operator == OP_NON_EQUAL_INT ) /* Execute non equal operator ( != )*/
+		{
+			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
+			
+			result_type_cast_l = AUTO_TYPE_CASTING( value_left_temp);
+			result_type_cast_r = AUTO_TYPE_CASTING( value_right_temp );
+			
+			if( flag_typecasting == 1 )
+			{
+				if( (result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1) )
+				{
+					if( result_type_cast_l.value_cast_int != result_type_cast_r.value_cast_int )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
+				}
+				else if( (result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1) )
+				{
+					if( result_type_cast_l.value_cast_float != result_type_cast_r.value_cast_float )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
+			}
+			else
+			{
+				if ( strlen( value_left_temp ) != strlen( value_right_temp ) )
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 1;
+				}
+				else
+				{
+					value_left_temp = NULL;
+					value_right_temp = NULL;
+					return 0;
+				}
+			}
+			result_type_cast_l.flag_cast_int 	= 0;
+			result_type_cast_l.value_cast_float = 0;
+			result_type_cast_r.flag_cast_int 	= 0;			
+			result_type_cast_r.value_cast_float = 0;
+			flag_typecasting = 0;
+		}		
 		else if( operator == OP_LESS_THAN_INT ) /* Execute non equal operator ( < )*/
 		{
 			copy_temporary_value_op_var( &value_left_temp, &value_right_temp, operator );
-			AUTO_TYPE_CASTING( &value_left_temp, &value_right_temp );
-			if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
+			
+			result_type_cast_l = AUTO_TYPE_CASTING( value_left_temp);
+			result_type_cast_r = AUTO_TYPE_CASTING( value_right_temp );
+			
+			if( flag_typecasting == 1 )
 			{
-				if( value_left_temp < value_right_temp )
+				if( (result_type_cast_l.flag_cast_int == 1 && result_type_cast_r.flag_cast_int == 1) )
 				{
-					value_left_temp = NULL;
-					value_right_temp = NULL;			
-					return 1;
+					if( result_type_cast_l.value_cast_int < result_type_cast_r.value_cast_int )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
+				}
+				else if( (result_type_cast_l.flag_cast_float == 1 && result_type_cast_r.flag_cast_float == 1) )
+				{
+					if( result_type_cast_l.value_cast_float < result_type_cast_r.value_cast_float )
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;			
+						return 1;
+					}
+					else
+					{
+						value_left_temp = NULL;
+						value_right_temp = NULL;
+						return 0;
+					}
 				}
 				else
 				{
@@ -404,42 +676,53 @@ STATEMENT_INT_T exec_comparison_operator( int operator )
 			}
 			else
 			{
-				if ( strcmp( value_left_temp, value_right_temp ) < 0 )
+				if ( strlen( value_left_temp ) < strlen( value_right_temp ) )
 				{
 					value_left_temp = NULL;
-					value_right_temp = NULL;			
+					value_right_temp = NULL;
 					return 1;
 				}
 				else
-				{				
+				{
 					value_left_temp = NULL;
 					value_right_temp = NULL;
 					return 0;
 				}
 			}
+			result_type_cast_l.flag_cast_int 	= 0;
+			result_type_cast_l.value_cast_float = 0;
+			result_type_cast_r.flag_cast_int 	= 0;			
+			result_type_cast_r.value_cast_float = 0;
+			flag_typecasting = 0;			
 		}
 }
 
-/* try improve attribution to to this typecast: thus cause warning. */
-STATEMENT_VOID_T AUTO_TYPE_CASTING( char **value_variable_l, char **value_variable_r )
+typecasting_t AUTO_TYPE_CASTING( char *value_variable )
 {
-	flag_typecasting_l = 0;
-	flag_typecasting_r = 0;
-	match = regex_match_syntax( "[A-Za-z!@#$%&*)(*/.,\\|_-]+", *value_variable_l );
-	if( match == 0 )
-	{			
-		flag_typecasting_l = 1;
-	}
-	match = regex_match_syntax( "[A-Za-z!@#$%&*)(*/.,\\|_-]+", *value_variable_r );
-	if( match == 0 )
-	{
-		flag_typecasting_r = 1;
-	}
-	if( flag_typecasting_l == 1 && flag_typecasting_r == 1 )
-	{
-		*value_variable_l = (long int)atoi(*value_variable_l);
-		*value_variable_r = (long int)atoi(*value_variable_r);		
-	}
+        typecasting_t value_casted;
+        value_casted.flag_cast_float = 0;
+        value_casted.flag_cast_int = 0;
+        match = regex_match_syntax( "[A-Za-z!@#$%&*)(*/,\\|_-]+", value_variable );
+        if( match == 0 )
+        {
+			flag_typecasting = 1;
+			match = regex_match_syntax( "[.]+", value_variable );
+			if( match == 1 )
+			{
+					value_casted.flag_cast_float = 1;
+					value_casted.value_cast_float = atof( value_variable );
+			}
+			else
+			{
+					value_casted.flag_cast_int = 1;
+					value_casted.value_cast_int = atoi( value_variable );
+			}
+        }
+        else
+        {
+			value_casted.value_cast_char_p = value_variable;
+		}
+        return value_casted;
 }
 
 STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string )

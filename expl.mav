@@ -1,30 +1,32 @@
 a = 10;
 b = 10;
-c = "coco";
 if( a == b )
 {
 	print "'a' igual a variavel 'b'";
 }
-if( b != c )
+
+c = 25;
+d = 24;
+if( c > d )
 {
-	print c;
+	print "'c' maior que 'd'";
 }
-d = 27;
-e = 20;
-if( d < e )
+
+e = 10;
+f = 11;
+if( e != f )
 {
-	print d;
-	print e;
-	print "'d' é menor que a var 'e'";
+	print "'e' diferente de 'f'";
 }
-if( d > e )
+
+g = "min";
+h = "major";
+if( g < h )
 {
-        print d;
-        print e;
-        print "'d' é maior que a var 'e'";
+	print "'g' menor que 'h'";
 }
 
 print 33 + 33;
-print 33 - 30;
+print 24 - 10;
 print 2 * 3;
-print 20 / 5;
+print 25.0 / 4.0;

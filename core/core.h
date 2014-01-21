@@ -84,6 +84,22 @@ struct result_operator
 	char* op_char_p;
 } result_match_operator;
 
+/* */
+typedef struct _typecasting_t
+{
+	int flag_cast_int;
+	int flag_cast_float;
+	int flag_cast_double;
+	int flag_cast_char;
+	int flag_cast_char_p;
+
+	int value_cast_int;
+	float value_cast_float;
+	double value_cast_double;
+	char value_cast_char;
+	char* value_cast_char_p;
+} typecasting_t;
+
 /* content of regex result */
 char* content_match;
 
@@ -97,8 +113,7 @@ int control_begin_block;
 int control_end_block;
 int result_comparison;
 
-int flag_typecasting_l;
-int flag_typecasting_r;
+int flag_typecasting;
 
 /* Functions defined by user */
 DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes );
@@ -121,7 +136,7 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code );
 
 /* */
-STATEMENT_VOID_T AUTO_TYPE_CASTING( char **value_variable_l, char **value_variable_r );/* variable_l => variable left, variable_r => variable right*/
+typecasting_t AUTO_TYPE_CASTING( char *value_variable );
 
 /* print statement */
 STATEMENT_VOID_T PRINT_ESTATEMENT_F( char* statement_string );

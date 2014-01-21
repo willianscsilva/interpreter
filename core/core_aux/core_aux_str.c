@@ -91,6 +91,7 @@ free_and_exit:
     free(copy);
 }
 
+/* improve this function, very bad */
 char* INTERNAL_TRIM_L ( char* str )
 {
 	register int str_length = 0;
