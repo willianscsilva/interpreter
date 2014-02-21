@@ -1,4 +1,4 @@
-# Interpreter
+# The Maverick Interpreter
 The Maverick Programming Language
 
 # How to
