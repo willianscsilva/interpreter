@@ -1,3 +1,13 @@
+/*
+	+----------------------------------------------------------------------------------------------------+
+	|Author	 : Willians Costa da Silva																	 |
+	|Email	 : willianscsilva@gmail.com																	 |
+	+----------------------------------------------------------------------------------------------------+
+	|License : GNU General Public License version 2.0 (GPLv2) - http://www.gnu.org/licenses/gpl-2.0.html |
+	|Created : 2013-12-01												                                 |
+	|Note    : Copy, distribute, modify freely, but keep the credits, please.							 |
+	+----------------------------------------------------------------------------------------------------+
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,10 +57,13 @@ void get_begin_end_block( char char_content );
 void validate_beginend_block();
 
 /* Validate end of instructions */
-void validate_end_instructions( char char_content );
+void validate_end_instructions( char* char_content );
 
 /* Read line by line of code block and call all function of validation here */
 void call_validation_functions( char* content_to_analysis );
+
+/* */
+int is_statement( char* content );
 
 /* main function equivalent */
 void syntax_init( int argc, char **argv );

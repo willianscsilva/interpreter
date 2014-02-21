@@ -1,3 +1,13 @@
+/*
+	+----------------------------------------------------------------------------------------------------+
+	|Author	 : Willians Costa da Silva																	 |
+	|Email	 : willianscsilva@gmail.com																	 |
+	+----------------------------------------------------------------------------------------------------+
+	|License : GNU General Public License version 2.0 (GPLv2) - http://www.gnu.org/licenses/gpl-2.0.html |
+	|Created : 2013-12-01												                                 |
+	|Note    : Copy, distribute, modify freely, but keep the credits, please.							 |
+	+----------------------------------------------------------------------------------------------------+
+*/
 #include "core.h"
 #include "core_aux/core_aux_regex.h"
 #include "core_aux/core_aux_str.h"
@@ -17,13 +27,13 @@ DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes )
 
 STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
 {
-	match = regex_match_syntax( ATTRIBUTION_OPERATOR, line_script_code);
+	match = regex_match_syntax( ATTRIBUTION_OPERATOR, line_script_code);	
 	if( match == 1 )
 	{
-		match = regex_match_syntax("(.*?)[ ]?[!]+|[=]{2}[ ]?(.*?)", line_script_code);
+		match = regex_match_syntax("(.*?)[ ]?[!]+|[=]{2}[ ]?(.*?)", line_script_code);		
 		if( match == 0 )
 		{
-			char*  name_var_extracted;
+			char* name_var_extracted;
 			char* value_var_extracted;
 			char **list;
 			size_t i, len;
@@ -31,7 +41,7 @@ STATEMENT_VOID_T attribute_value_to_variables( char* line_script_code )
 			SPLIT_STR( line_script_code, ATTRIBUTION_OPERATOR, &list, &len);
 			name_var_extracted = REPLACE_STR( list[0], " ", "" );
 			value_var_extracted = REPLACE_STR( REPLACE_STR( list[1], " ", "" ), ";", "" );
-			
+			//printf("name_var_extracted => %s, value_var_extracted => %s\n", name_var_extracted, value_var_extracted);
 			register_variables( name_var_extracted, value_var_extracted );
 			name_var_extracted = NULL;
 			value_var_extracted = NULL;
@@ -301,6 +311,7 @@ STATEMENT_VOID_T arithmetic_operations( char** line_script_code )
 STATEMENT_VOID_T find_statement( char* statement_string )
 {
 	register int i;
+	
 	int operator;
 	
 	arithmetic_operations( &statement_string );
@@ -322,13 +333,22 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 			}
 		}
 		
-		match = regex_match_syntax( internal_statement[i], statement_string );
+		if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
+		{
+			match = regex_match_syntax("[ (]+", internal_statement[i]);
+			if( match == 0 )
+			{
+				strcat(internal_statement[i], "[ (]+");
+			}			
+		}
+		
+		match = regex_match_syntax( internal_statement[i], statement_string );		
 		if( match == 1 )
 		{
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );				
-				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );
+				extract_args_to_func_operator( statement_string, IF_STRUCT_CTRL );				
 				result_comparison = exec_comparison_operator( result_match_operator.op_int );
 				
 				statement_control.flag_if = 1;/* set flag where occur a if statement */
