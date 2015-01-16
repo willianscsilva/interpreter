@@ -24,13 +24,13 @@ char* get_content_scriptfile( int argc, char **argv )
 		buffer = malloc (length);
 		if (buffer)
 		{
-			fread (buffer, 1, length, fp);			
+			fread (buffer, 1, length, fp);
 		}
 		fclose (fp);
 	}
-	else	
-	{		
-		printf("ERROR: Error opening file, make sure that the file exists!\n\n");	
+	else
+	{
+		printf("ERROR: Error opening file, make sure that the file exists!\n\n");
 		exit(EXIT_FAILURE);
 	}
 	return buffer;
@@ -40,8 +40,8 @@ void validate_extesionfile( char* file_name )
 {
 	match = regex_match_syntax( "\\.mav", file_name );
 	if( match == 0 )
-	{	
-		printf("Invalid extension file! Use \".mav\".\n");	
+	{
+		printf("Invalid extension file! Use \".mav\".\n");
 		exit( EXIT_FAILURE );
 	}
 }
@@ -62,10 +62,10 @@ void get_begin_end_block( char char_content )
 
 void validate_beginend_block()
 {
-	LEVEL_ERROR = "FATAL_ERROR: ";	
+	LEVEL_ERROR = "FATAL_ERROR: ";
 	if( count_block.count_begin < count_block.count_end )
 	{
-		printf( "%sBegin block ( { ) not found!\n", LEVEL_ERROR );		
+		printf( "%sBegin block ( { ) not found!\n", LEVEL_ERROR );
 		count_block.count_begin = 0;
 		count_block.count_end = 0;
 		match_break_line = 0;
@@ -85,12 +85,12 @@ void validate_beginend_block()
 }
 
 void validate_end_instructions( char* char_content )
-{		
-	LEVEL_ERROR = "FATAL_ERROR: ";		
+{
+	LEVEL_ERROR = "FATAL_ERROR: ";
 	int is_st = is_statement( char_content );
 	if( is_st == 0 )
 	{
-		match = regex_match_syntax( ";[\n]?", char_content );		
+		match = regex_match_syntax( ";[\n]?", char_content );
 		if( match == 0 )
 		{
 			printf( "%sEnd of instructions ( ; ) not found! Line Error: %d\n", LEVEL_ERROR, LINE_ERROR );
@@ -104,12 +104,12 @@ void call_validation_functions( char* content_to_analysis )
 	char char_content;
 	/* if a conditional structure flag fl_verify_block = 1, and verify opening and closing code blocks with '{}' */
 	register int fl_verify_block;
-	int is_st = is_statement( content_to_analysis );	
+	int is_st = is_statement( content_to_analysis );
 	if( is_st == 1 )
-	{	
+	{
 		fl_verify_block = 1;
 	}
-	
+
 	register int i = 0;
 	LINE = 1;
 	for ( i ; i < length-1 ; i++ )
@@ -119,27 +119,31 @@ void call_validation_functions( char* content_to_analysis )
 		{
 			LINE++;
 		}
-		
+
 		char_content = content_to_analysis[i];
-		
+
 		if( fl_verify_block == 1 )
 		{
 			get_begin_end_block( char_content );
-		}				
-	}	
-	validate_beginend_block();	
+		}
+	}
+	validate_beginend_block();
 }
 
 int is_statement( char* content )
 {
 	/* thus the stack overflow :( improve it. */
-	//match = regex_match_syntax( "(if[ (]+|for[ (]+|while[ (]+|{|})", content );	
-	register int match_if = regex_match_syntax( "(if[ (]+)", content );	
+	//match = regex_match_syntax( "(if[ (]+|for[ (]+|while[ (]+|{|})", content );
+	//"if", "else", "for", "while", "def"
+	register int match_if = regex_match_syntax( "(if[ (]+)", content );
 	register int match_for = regex_match_syntax( "(for[ (]+)", content );
 	register int match_while = regex_match_syntax( "(while[ (]+)", content );
 	register int match_key_block = regex_match_syntax( "({|})", content );
-	
-	if( match_if == 1 || match_for == 1 || match_while == 1 || match_key_block == 1 )	
+	register int match_else = regex_match_syntax( "(else)", content );
+	register int match_def = regex_match_syntax( "(def[ (]+)", content );
+
+	if( match_if == 1 || match_for == 1 || match_while == 1 ||
+        match_key_block == 1 || match_else == 1 || match_def == 1 )
 	{
 		return 1;
 	}
@@ -156,13 +160,13 @@ void syntax_init( int argc, char **argv )
 	match = 0;
 	count_block.count_begin = 0;
 	count_block.count_end = 0;
-	
-	validate_extesionfile( argv[1] );		
-	content_to_analysis = get_content_scriptfile( argc, argv );	
-	length = strlen( content_to_analysis );	
-	call_validation_functions( content_to_analysis );	
-	
-	
+
+	validate_extesionfile( argv[1] );
+	content_to_analysis = get_content_scriptfile( argc, argv );
+	length = strlen( content_to_analysis );
+	call_validation_functions( content_to_analysis );
+
+
 	free( content_to_analysis );
 	content_to_analysis = NULL;
 }

@@ -19,11 +19,15 @@ if( e != f )
 	print "'e' diferente de 'f'";
 }
 
-g = "min";
-h = "major";
+g = "major";
+h = "min";
 if( g < h )
 {
 	print "'g' menor que 'h'";
+}
+else
+    print "'g' maior que 'h'";
+    print "SOMA" 1 + 1 " vixe";
 }
 
 print 33 + 33;
