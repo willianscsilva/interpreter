@@ -26,6 +26,7 @@ if( g < h )
 	print "'g' menor que 'h'";
 }
 else
+{
     print "'g' maior que 'h'";
     print "SOMA" 1 + 1 " vixe";
 }

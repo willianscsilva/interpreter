@@ -21,17 +21,17 @@
 #define LENGTH_OP_INDEX_VAL 7
 
 /* define comparison operators */
-#define OP_EQUAL 				"=="
-#define OP_NON_EQUAL 			"!="
-#define OP_LESS_THAN 			"<"
-#define OP_GREATER_THAN 		">"
-#define OP_LESS_EQUAL_THAN 		"<="
+#define OP_EQUAL 		"=="
+#define OP_NON_EQUAL 		"!="
+#define OP_LESS_THAN 		"<"
+#define OP_GREATER_THAN 	">"
+#define OP_LESS_EQUAL_THAN 	"<="
 #define OP_GREATER_EQUAL_THAN 	">="
 
 /* get decimals ( ascii ) of operators */
-#define OP_EQUAL_INT 				OP_EQUAL[0]
-#define OP_NON_EQUAL_INT 			OP_NON_EQUAL[0]
-#define OP_LESS_THAN_INT 			OP_LESS_THAN[0]
+#define OP_EQUAL_INT 			OP_EQUAL[0]
+#define OP_NON_EQUAL_INT 		OP_NON_EQUAL[0]
+#define OP_LESS_THAN_INT 		OP_LESS_THAN[0]
 #define OP_GREATER_THAN_INT 		OP_GREATER_THAN[0]
 #define OP_LESS_EQUAL_THAN_INT 		OP_LESS_EQUAL_THAN[0]
 #define OP_GREATER_EQUAL_THAN_INT 	OP_GREATER_EQUAL_THAN[0]
@@ -49,10 +49,10 @@
 #define DIV(a, b)(a / b)
 
 /* arithmetic operators ( ascii ) */
-#define OP_ADDITION_INT 		OP_ADDITION[0]
-#define OP_SUBTRACTION_INT 		OP_SUBTRACTION[0]
+#define OP_ADDITION_INT 	OP_ADDITION[0]
+#define OP_SUBTRACTION_INT 	OP_SUBTRACTION[0]
 #define OP_MULTIPLICATION_INT 	OP_MULTIPLICATION[0]
-#define OP_DIVISION_INT 		OP_DIVISION[0]
+#define OP_DIVISION_INT 	OP_DIVISION[0]
 
 /* define control struct */
 #define IF_STRUCT_CTRL 		"if"
@@ -61,6 +61,17 @@
 #define WHILE_STRUCT_CTRL 	"while"
 #define DEF_STRUCT_CTRL 	"def"
 #define RETURN_STRUCT_CTRL 	"return"
+
+/* define decimals(ascii) of control struct */
+#define IF_STRUCT_CTRL_INT      IF_STRUCT_CTRL[0]
+#define ELSE_STRUCT_CTRL_INT    ELSE_STRUCT_CTRL[0]
+#define FOR_STRUCT_CTRL_INT     FOR_STRUCT_CTRL[0]
+#define WHILE_STRUCT_CTRL_INT   WHILE_STRUCT_CTRL[0]
+#define DEF_STRUCT_CTRL_INT     DEF_STRUCT_CTRL[0]
+#define RETURN_STRUCT_CTRL_INT  RETURN_STRUCT_CTRL[0]
+
+/* define structures */
+#define ARRAY_STRUCT "array"
 
 /* IO */
 #define PRINT_ESTATEMENT "print"
@@ -75,14 +86,6 @@
 /* Define token to begin and end a block of instructions.(ascii) */
 #define BEGIN_BLOCK_INT BEGIN_BLOCK[0]
 #define END_BLOCK_INT 	END_BLOCK[0]
-
-/* define decimals(ascii) of control struct */
-#define IF_STRUCT_CTRL_INT 		IF_STRUCT_CTRL[0]
-#define ELSE_STRUCT_CTRL_INT 	ELSE_STRUCT_CTRL[0]
-#define FOR_STRUCT_CTRL_INT 	FOR_STRUCT_CTRL[0]
-#define WHILE_STRUCT_CTRL_INT 	WHILE_STRUCT_CTRL[0]
-#define DEF_STRUCT_CTRL_INT 	DEF_STRUCT_CTRL[0]
-#define RETURN_STRUCT_CTRL_INT 	RETURN_STRUCT_CTRL[0]
 
 /* define decimals of print */
 #define PRINT_ESTATEMENT_INT PRINT_ESTATEMENT[0]

@@ -38,10 +38,10 @@ char* get_content_scriptfile( int argc, char **argv )
 
 void validate_extesionfile( char* file_name )
 {
-	match = regex_match_syntax( "\\.mav", file_name );
+	match = regex_match_syntax( "\\.mvk", file_name );
 	if( match == 0 )
 	{
-		printf("Invalid extension file! Use \".mav\".\n");
+		printf("Invalid extension file! Use \".mvk\".\n");
 		exit( EXIT_FAILURE );
 	}
 }

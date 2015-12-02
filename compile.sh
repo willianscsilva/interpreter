@@ -8,4 +8,4 @@ gcc \
 	core/core_aux/core_aux_str.c \
 	core/core_variables.c \
 	-lpcre \
-	-omav
+	-omaverick

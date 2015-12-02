@@ -17,7 +17,7 @@
 char internal_statement[LENGTH_OP_INDEX_VAL][LENGTH_OP_VEC_VAL] = { "if", "else", "for", "while", "def", "return", "print" };
 
 /* built-in functions */
-char internal_functions[1][LENGTH_OP_VEC_VAL] = { "" };
+char internal_functions[1][LENGTH_OP_VEC_VAL] = { "array" };
 
 DEFINED_FUNC_T DEFINED_FUNCTION( char* function_name, char* func_attributes )
 {
@@ -346,7 +346,7 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 		match = regex_match_syntax( internal_statement[i], statement_string );
 		if( match == 1 )
 		{
-		    //IF
+		        //IF
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );
@@ -355,11 +355,11 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 
 				statement_control.flag_if = 1;/* set flag where occur a if statement */
 			}
-            //ELSE
+                        //ELSE
 			if( internal_statement[i][0] == ELSE_STRUCT_CTRL_INT )
-            {
-                statement_control.flag_else = 1;
-            }
+                        {
+                            statement_control.flag_else = 1;
+                        }
 
 			if( internal_statement[i][0] == PRINT_ESTATEMENT_INT )
 			{
@@ -371,12 +371,12 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 					}
 				}
 				else if( statement_control.flag_else == 1 && control_begin_block == 1 )
-                {
-                    if( result_comparison == 0 )
-					{
+                                {
+                                    if( result_comparison == 0 )
+				    {
 						PRINT_ESTATEMENT_F( statement_string );
-					}
-                }
+				    }
+                                }
 				else
 				{
 					PRINT_ESTATEMENT_F( statement_string );

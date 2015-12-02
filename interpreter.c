@@ -15,7 +15,7 @@ int main( int argc, char **argv )
 {
 	if ( argc <= 1 )
 	{
-		printf( "Expected Script File!\n\nUse:%s myscript.mav\n", argv[0] );
+		printf( "Expected Script File!\n\nUse:%s myscript.mvk\n", argv[0] );
 		exit(EXIT_FAILURE);
 	}
 	arg_count = argc;
