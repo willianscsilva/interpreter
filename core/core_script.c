@@ -10,6 +10,8 @@
 */
 #include "core_script.h"
 #include "core.h"
+#include "core_aux/core_aux_regex.h"
+#include "syntax_analysis.h"
 
 void read_script_file()
 {
