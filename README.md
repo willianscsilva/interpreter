@@ -10,5 +10,5 @@ clone it:
 and run
 
     sh compile.sh
-    ./maverick example.mav
+    ./maverick example.mvk
 
