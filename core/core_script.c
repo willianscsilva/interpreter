@@ -23,35 +23,35 @@ void read_script_file()
 
 	fp = fopen( arg_val[1], "r" );
 	if (fp == NULL)
-	{	
+	{
 		printf( "Script file not found!\n" );
 		exit(EXIT_FAILURE);
 	}
 	i = 1;
-	while ( (read = getline(&line, &len, fp)) != -1 ) 
+	while ( (read = getline(&line, &len, fp)) != -1 )
 	{
-		int match = regex_match_syntax( "^[\n]+", line );		
+		int match = regex_match_syntax( "^[\n]+", line );
 		if( match == 0 )
-		{			
+		{
 			validate_end_instructions( line );
-		}		
+		}
 		attribute_value_to_variables( line );
 		find_statement( line );
 		i++;
 		LINE_ERROR++;
 	}
-	
+
 	if ( line )
 	{
 		free(line);
-	}		
+	}
 }
 
 void core_script_init()
 {
 	LINE_ERROR = 1;
-	read_script_file();	
-	
+	read_script_file();
+
 	free_register_variables();
 	free_register_temp_variables();
 }

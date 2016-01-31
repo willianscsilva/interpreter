@@ -10,6 +10,7 @@
 */
 #include "syntax_analysis.h"
 #include "core_aux/core_aux_regex.h"
+#include "core_statement.h"
 
 char* get_content_scriptfile( int argc, char **argv )
 {
@@ -132,8 +133,8 @@ void call_validation_functions( char* content_to_analysis )
 
 int is_statement( char* content )
 {
-	/* thus the stack overflow :( improve it. */
-	//match = regex_match_syntax( "(if[ (]+|for[ (]+|while[ (]+|{|})", content );
+	statement_controllers_t statement_control;
+
 	//"if", "else", "for", "while", "def"
 	register int match_if = regex_match_syntax( "(if[ (]+)", content );
 	register int match_for = regex_match_syntax( "(for[ (]+)", content );
@@ -141,6 +142,16 @@ int is_statement( char* content )
 	register int match_key_block = regex_match_syntax( "({|})", content );
 	register int match_else = regex_match_syntax( "(else)", content );
 	register int match_def = regex_match_syntax( "(def[ (]+)", content );
+	register int match_return = regex_match_syntax( "(return[\\s]+)", content );
+	register int match_print = regex_match_syntax( "(print[\\s]+)", content );
+
+    statement_control.flag_if = match_if;
+	statement_control.flag_else = match_else;
+	statement_control.flag_def = match_def;
+	statement_control.flag_for = match_for;
+	statement_control.flag_while = match_while;
+	statement_control.flag_return = match_return;
+	statement_control.flag_print = match_print;
 
 	if( match_if == 1 || match_for == 1 || match_while == 1 ||
         match_key_block == 1 || match_else == 1 || match_def == 1 )

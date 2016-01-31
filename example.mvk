@@ -35,3 +35,10 @@ print 33 + 33;
 print 24 - 10;
 print 2 * 3;
 print 25.0 / 4.0;
+
+i = 0;
+for( i ; i < 10; i++ )
+{
+    print "ESTOU NO FOR DO SCRIPT";
+    print i;
+}

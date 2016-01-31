@@ -346,7 +346,7 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 		match = regex_match_syntax( internal_statement[i], statement_string );
 		if( match == 1 )
 		{
-		        //IF
+		    //IF
 			if( internal_statement[i][0] == IF_STRUCT_CTRL_INT )
 			{
 				find_comparison_operator( statement_string );
@@ -355,11 +355,11 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 
 				statement_control.flag_if = 1;/* set flag where occur a if statement */
 			}
-                        //ELSE
+            //ELSE
 			if( internal_statement[i][0] == ELSE_STRUCT_CTRL_INT )
-                        {
-                            statement_control.flag_else = 1;
-                        }
+            {
+                statement_control.flag_else = 1;
+            }
 
 			if( internal_statement[i][0] == PRINT_ESTATEMENT_INT )
 			{
@@ -382,9 +382,31 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 					PRINT_ESTATEMENT_F( statement_string );
 				}
 			}
+
+			if(internal_statement[i][0] == FOR_STRUCT_CTRL_INT)
+			{
+                FOR_STATEMENT_F(statement_string);
+			}
+
 		}
 	}
 }
+
+STATEMENT_VOID_T FOR_STATEMENT_F(char* statement_string)
+{
+
+	char **list;
+	size_t len;
+    SPLIT_STR( statement_string, ";", &list, &len);
+
+	//FOR_ITERATOR = REPLACE_STR(list[0], "for( ", "");
+    printf("statement_string => %s\n", statement_string);
+	printf("len => %d\n",(int)len);
+	printf("PONTO VIRGULA 0 => %s\n", list[0]);
+	printf("PONTO VIRGULA 1 => %s\n", list[1]);
+	printf("PONTO VIRGULA 2 => %s\n", list[2]);
+
+};
 
 STATEMENT_VOID_T find_comparison_operator( char* statement_string )
 {
@@ -421,7 +443,7 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 		var_rep3 = REPLACE_STR( var_rep2, ")", "" );
 		var_rep4 = REPLACE_STR( var_rep3, " ", "" );
 		name_var_extracted = REPLACE_STR( var_rep4, "\n", "" );
-
+        
 		result_var_search = search_variables_registered( name_var_extracted );
         /*if variable not exists, attribute "NULL" value to her*/
 		if( result_var_search == 0 )

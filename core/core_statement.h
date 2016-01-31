@@ -45,5 +45,8 @@ typedef struct _statement_controllers_t
 	int flag_if;
 	int flag_else;
 	int flag_def;
-	
+	int flag_for;
+	int flag_while;
+	int flag_return;
+	int flag_print;	
 } statement_controllers_t;

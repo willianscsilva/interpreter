@@ -122,6 +122,7 @@ variables_t* result_var_search;
 /* Controller with flags if a statement */
 statement_controllers_t statement_control;
 
+int FOR_ITERATOR;
 int control_begin_block;
 int control_end_block;
 int result_comparison;
@@ -159,3 +160,6 @@ STATEMENT_VOID_T PRINT_VAR( char * var_to_print );
 
 /* Print only strings expl.: print "hello world!"*/
 STATEMENT_VOID_T PRINT_STRING( char * string_to_print );
+
+/*For stetament*/
+STATEMENT_VOID_T FOR_STATEMENT_F(char* statement_string);
