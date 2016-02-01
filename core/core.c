@@ -394,18 +394,25 @@ STATEMENT_VOID_T find_statement( char* statement_string )
 
 STATEMENT_VOID_T FOR_STATEMENT_F(char* statement_string)
 {
-
+    char* name_var_extracted = NULL;
+	char* name_var_extracted_temp = NULL;
 	char **list;
 	size_t len;
-    SPLIT_STR( statement_string, ";", &list, &len);
 
-	//FOR_ITERATOR = REPLACE_STR(list[0], "for( ", "");
-    printf("statement_string => %s\n", statement_string);
+    SPLIT_STR( statement_string, ";", &list, &len);
+	name_var_extracted_temp = REPLACE_STR(list[0], "for( ", "");
+	name_var_extracted = REPLACE_STR(REPLACE_STR( name_var_extracted_temp, "\n", "" ), " ", "");
+	result_var_search  = search_variables_registered(name_var_extracted);
+
+	if(result_var_search > 0){
+		FOR_ITERATOR = atoi(result_var_search->value);
+	}
+
+    /*printf("statement_string => %s\n", statement_string);
 	printf("len => %d\n",(int)len);
 	printf("PONTO VIRGULA 0 => %s\n", list[0]);
 	printf("PONTO VIRGULA 1 => %s\n", list[1]);
-	printf("PONTO VIRGULA 2 => %s\n", list[2]);
-
+	printf("PONTO VIRGULA 2 => %s\n", list[2]);*/
 };
 
 STATEMENT_VOID_T find_comparison_operator( char* statement_string )
@@ -443,7 +450,7 @@ STATEMENT_VOID_T extract_args_to_func_operator( char* statement_string, char* st
 		var_rep3 = REPLACE_STR( var_rep2, ")", "" );
 		var_rep4 = REPLACE_STR( var_rep3, " ", "" );
 		name_var_extracted = REPLACE_STR( var_rep4, "\n", "" );
-        
+
 		result_var_search = search_variables_registered( name_var_extracted );
         /*if variable not exists, attribute "NULL" value to her*/
 		if( result_var_search == 0 )
